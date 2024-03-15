@@ -11,7 +11,9 @@ public class ApplyFilters {
         filePath = input.nextLine();
         input.close();
         Filters filters = new Filters(filePath);
+
         filters.BrighterFilter("brighter.jpg",128);
+        filters.GrayScaleFilter("grayscale.jpg");
     }
 
 }

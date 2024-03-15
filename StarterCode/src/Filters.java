@@ -5,13 +5,13 @@ import java.io.IOException;
 /**
  * Creating image filters for grayscale, brighter, swirl,
  * glass and blur effect
- * 
+ *
  * @author Jorge Coelho
  * @contact jmn@isep.ipp.pt
  * @version 1.0
  */
 public class Filters {
-    
+
     String file;
     Color image[][];
 
@@ -54,6 +54,29 @@ public class Filters {
 
                 // outputs average into picuture to make grayscale
                 tmp[i][j] = new Color(r, g, b);
+
+            }
+        }
+        Utils.writeImage(tmp, outputFile);
+    }
+
+    public void GrayScaleFilter(String outputFile) throws IOException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        // Runs through entire matrix
+        for (int i = 0; i < tmp.length; i++) {
+            for (int j = 0; j < tmp[i].length; j++) {
+
+                // fetches values of each pixel
+                Color pixel = tmp[i][j];
+                int r = pixel.getRed();
+                int g = pixel.getGreen();
+                int b = pixel.getBlue();
+
+                int a = (r + g + b) / 3;
+
+                // outputs average into picture to make grayscale
+                tmp[i][j] = new Color(a, a, a);
 
             }
         }

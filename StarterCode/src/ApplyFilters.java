@@ -14,6 +14,7 @@ public class ApplyFilters {
 
         filters.BrighterFilter("brighter.jpg",128);
         filters.GrayScaleFilter("grayscale.jpg");
+        filters.GlassFilter("glass.jpg");
     }
 
 }

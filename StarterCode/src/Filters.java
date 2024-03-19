@@ -1,5 +1,4 @@
-
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -7,8 +6,8 @@ import java.io.IOException;
  * glass and blur effect
  *
  * @author Jorge Coelho
- * @contact jmn@isep.ipp.pt
  * @version 1.0
+ * @contact jmn@isep.ipp.pt
  */
 public class Filters {
 
@@ -83,5 +82,26 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
+    public void GlassFilter(String outputFile) throws IOException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        int width = tmp.length;
+        int height = tmp[0].length;
+        int radius = 5;
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int dx = (int) (Math.random() * radius * 2 - radius);
+                int dy = (int) (Math.random() * radius * 2 - radius);
+                int newX = i + dx;
+                int newY = j + dy;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    tmp[i][j] = image[newX][newY];
+                }
+            }
+        }
+
+        Utils.writeImage(tmp, outputFile);
+    }
 
 }

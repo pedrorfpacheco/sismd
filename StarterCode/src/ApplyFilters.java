@@ -9,13 +9,13 @@ public class ApplyFilters {
         System.out.println("Insert the name of the file path you would like to use.");
         String filePath = input.nextLine();
 
-        System.out.println("Insert what filter you would like to apply to the image.");
-        System.out.println("1. Brighter Filter");
-        System.out.println("2. GrayScale Filter");
-        System.out.println("3. Swirl Filter");
-        System.out.println("4. Glass Filter");
-        System.out.println("5. Blur Filter");
-        System.out.println("6. Conditional Blur Filter");
+        System.out.println("\nInsert what filter you would like to apply to the image." +
+                "\n1. Brighter Filter" +
+                "\n2. GrayScale Filter" +
+                "\n3. Swirl Filter" +
+                "\n4. Glass Filter" +
+                "\n5. Blur Filter" +
+                "\n6. Conditional Blur Filter");
 
         String filter = input.nextLine();
         input.close();
@@ -28,18 +28,18 @@ public class ApplyFilters {
         switch (filter) {
             case "1":
                 filters.BrighterFilter("brighter.jpg", 128);
-                System.out.println("Brighter filter applied to image on file brighter.jpg");
+                System.out.println("\nBrighter filter applied to image on file brighter.jpg");
                 break;
             case "2":
                 filters.GrayScaleFilter("grayscale.jpg");
-                System.out.println("Grayscale filter applied to image on file grayscale.jpg");
+                System.out.println("\nGrayscale filter applied to image on file grayscale.jpg");
                 break;
             case "4":
                 filters.GlassFilter("glass.jpg");
-                System.out.println("Glass filter applied to image on file glass.jpg");
+                System.out.println("\nGlass filter applied to image on file glass.jpg");
                 break;
             default:
-                System.out.println("Invalid filter");
+                System.out.println("\nInvalid filter");
                 break;
         }
 

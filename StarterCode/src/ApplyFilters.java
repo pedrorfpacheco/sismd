@@ -6,11 +6,9 @@ public class ApplyFilters {
     public static void main(String[] args) throws IOException {
 
         Scanner input = new Scanner(System.in);
-        String filePath = "";
         System.out.println("Insert the name of the file path you would like to use.");
-        filePath = input.nextLine();
+        String filePath = input.nextLine();
 
-        String filter = "";
         System.out.println("Insert what filter you would like to apply to the image.");
         System.out.println("1. Brighter Filter");
         System.out.println("2. GrayScale Filter");
@@ -19,7 +17,7 @@ public class ApplyFilters {
         System.out.println("5. Blur Filter");
         System.out.println("6. Conditional Blur Filter");
 
-        filter = input.nextLine();
+        String filter = input.nextLine();
         input.close();
 
         applyFilter(filter, filePath);
@@ -30,12 +28,15 @@ public class ApplyFilters {
         switch (filter) {
             case "1":
                 filters.BrighterFilter("brighter.jpg", 128);
+                System.out.println("Brighter filter applied to image on file brighter.jpg");
                 break;
             case "2":
                 filters.GrayScaleFilter("grayscale.jpg");
+                System.out.println("Grayscale filter applied to image on file grayscale.jpg");
                 break;
             case "4":
                 filters.GlassFilter("glass.jpg");
+                System.out.println("Glass filter applied to image on file glass.jpg");
                 break;
             default:
                 System.out.println("Invalid filter");

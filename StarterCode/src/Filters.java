@@ -63,7 +63,7 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public void GrayScaleFilter(String outputFile) throws IOException {
+    public void GrayScaleFilter(String outputFile) {
         Color[][] tmp = Utils.copyImage(image);
 
         // Runs through entire matrix
@@ -86,7 +86,7 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public void GlassFilter(String outputFile) throws IOException {
+    public void GlassFilter(String outputFile) {
         Color[][] tmp = Utils.copyImage(image);
 
         int width = tmp.length;

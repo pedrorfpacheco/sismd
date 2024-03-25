@@ -43,27 +43,33 @@ public class ApplyFilters {
 
         switch (filter) {
             case "1":
-                filters.BrighterFilter("brighter.jpg", 128);
-                //multiThreadFilters.BrighterFilter("brighter.jpg", 128, 8);
+                measureExecutionTime(() -> {
+                    try {
+                        filters.BrighterFilter("brighter.jpg", 128);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
                 break;
             case "2":
-                filters.GrayScaleFilter("grayscale.jpg");
+                measureExecutionTime(() -> {
+                    filters.GrayScaleFilter("grayscale.jpg");
+                });
 
                 System.out.println("\nGrayscale filter applied to image on file grayscale.jpg");
                 break;
             case "4":
-                long startTime = System.currentTimeMillis(); // Início do timer
-                //filters.GlassFilter("glass.jpg");
-                filters.GlassFilterMultiThread("glassMultiThread.jpg", 8);
-                long endTime = System.currentTimeMillis(); // Fim do timer
-                System.out.println("\nTempo de execução do filtro: " + (endTime - startTime) + " milissegundos");
+                measureExecutionTime(() -> {
+                    filters.GlassFilter("glass.jpg");
+                });
 
                 System.out.println("Glass filter applied to image on file glass.jpg");
                 break;
             case "10":
                 measureExecutionTime(() -> {
                     try {
-                        filters.GlassFilterMultiThread("glassMultiThread.jpg", 6);
+                        filters.GlassFilterMultiThread("glassMultiThread.jpg", 4);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

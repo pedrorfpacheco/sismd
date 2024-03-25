@@ -10,6 +10,7 @@ public class ApplyFilters {
         String filePath = input.nextLine();
 
         System.out.println("\nInsert what filter you would like to apply to the image." +
+                "\n-----Sequencial Filters-----" +
                 "\n1. Brighter Filter" +
                 "\n2. GrayScale Filter" +
                 "\n3. Swirl Filter" +

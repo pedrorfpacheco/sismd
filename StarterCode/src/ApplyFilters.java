@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class ApplyFilters {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         Scanner input = new Scanner(System.in);
         System.out.println("Insert the name of the file path you would like to use.");
@@ -38,26 +38,43 @@ public class ApplyFilters {
         applyFilter(filter, filePath);
     }
 
-    public static void applyFilter(String filter, String filePath) throws IOException {
+    public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
+
         switch (filter) {
             case "1":
                 filters.BrighterFilter("brighter.jpg", 128);
-                System.out.println("\nBrighter filter applied to image on file brighter.jpg");
+                //multiThreadFilters.BrighterFilter("brighter.jpg", 128, 8);
                 break;
             case "2":
                 filters.GrayScaleFilter("grayscale.jpg");
+
                 System.out.println("\nGrayscale filter applied to image on file grayscale.jpg");
                 break;
             case "4":
-                filters.GlassFilter("glass.jpg");
-                System.out.println("\nGlass filter applied to image on file glass.jpg");
+                long startTime = System.currentTimeMillis(); // Início do timer
+                //filters.GlassFilter("glass.jpg");
+                filters.GlassFilterMultiThread("glassMultiThread.jpg", 8);
+                long endTime = System.currentTimeMillis(); // Fim do timer
+                System.out.println("\nTempo de execução do filtro: " + (endTime - startTime) + " milissegundos");
+
+                System.out.println("Glass filter applied to image on file glass.jpg");
+                break;
+            case "10":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.GlassFilterMultiThread("glassMultiThread.jpg", 6);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
                 break;
             default:
                 System.out.println("\nInvalid filter");
                 break;
         }
-
     }
 
     public static void measureExecutionTime(Runnable runnable) {

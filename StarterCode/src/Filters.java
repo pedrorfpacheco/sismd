@@ -1,5 +1,9 @@
+import threads.GlassFilterThread;
+import utils.Utils;
+
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Creating image filters for grayscale, brighter, swirl,
@@ -102,6 +106,21 @@ public class Filters {
         }
 
         Utils.writeImage(tmp, outputFile);
+    }
+
+    public void GlassFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
+        int width = image.length;
+        int height = image[0].length;
+        int radius = 5;
+
+        CountDownLatch latch = new CountDownLatch(numThreads);
+
+        for (int t = 0; t < numThreads; t++) {
+            Thread thread = new GlassFilterThread(image, width, height, radius, outputfile, latch);
+            thread.start();
+        }
+
+        latch.await();
     }
 
 }

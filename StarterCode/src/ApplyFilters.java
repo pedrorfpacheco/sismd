@@ -15,7 +15,21 @@ public class ApplyFilters {
                 "\n3. Swirl Filter" +
                 "\n4. Glass Filter" +
                 "\n5. Blur Filter" +
-                "\n6. Conditional Blur Filter");
+                "\n6. Conditional Blur Filter" +
+                "\n\n-----MultiThread Filters-----" +
+                "\n7. Brighter Filter" +
+                "\n8. GrayScale Filter" +
+                "\n9. Swirl Filter" +
+                "\n10. Glass Filter" +
+                "\n11. Blur Filter" +
+                "\n12. Conditional Blur Filter" +
+                "\n\n-----Thread Pool Filters-----" +
+                "\n13. Brighter Filter" +
+                "\n14. GrayScale Filter" +
+                "\n15. Swirl Filter" +
+                "\n16. Glass Filter" +
+                "\n17. Blur Filter" +
+                "\n18. Conditional Blur Filter");
 
         String filter = input.nextLine();
         input.close();

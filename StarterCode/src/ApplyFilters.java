@@ -59,4 +59,11 @@ public class ApplyFilters {
         }
 
     }
+
+    public static void measureExecutionTime(Runnable runnable) {
+        long startTime = System.currentTimeMillis();
+        runnable.run();
+        long endTime = System.currentTimeMillis();
+        System.out.println("\nExecution time: " + (endTime - startTime) + " milliseconds");
+    }
 }

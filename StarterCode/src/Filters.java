@@ -1,5 +1,6 @@
 import threadpool.GlassFilterTask;
 import threads.GlassFilterThread;
+import threads.GrayFilterThread;
 import utils.Utils;
 
 import java.awt.*;
@@ -110,6 +111,25 @@ public class Filters {
         }
 
         Utils.writeImage(tmp, outputFile);
+    }
+
+    public void GrayFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        int width = tmp.length;
+        int height = tmp[0].length;
+
+        Thread[] threads = new Thread[numThreads];
+        for (int i = 0; i < numThreads; i++) {
+            threads[i] = new GrayFilterThread(tmp, width, height, i, numThreads);
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
+            thread.join();
+        }
+
+        Utils.writeImage(tmp, outputfile);
     }
 
     public void GlassFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {

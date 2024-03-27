@@ -66,6 +66,17 @@ public class ApplyFilters {
 
                 System.out.println("Glass filter applied to image on file glass.jpg");
                 break;
+            case "8":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.GrayFilterMultiThread("grayscaleMultiThread.jpg", 4);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("\nGrayscale filter applied to image on file grayscaleMultiThread.jpg");
+                break;
             case "10":
                 measureExecutionTime(() -> {
                     try {

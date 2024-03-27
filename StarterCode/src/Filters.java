@@ -1,4 +1,5 @@
 import threadpool.GlassFilterTask;
+import threadpool.GrayFilterTask;
 import threads.GlassFilterThread;
 import threads.GrayFilterThread;
 import utils.Utils;
@@ -145,6 +146,24 @@ public class Filters {
         }
 
         latch.await();
+    }
+
+    public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        int width = tmp.length;
+        int height = tmp[0].length;
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        for (int i = 0; i < numThreads; i++) {
+            executor.execute(new GrayFilterTask(tmp, width, height, i, numThreads));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+        Utils.writeImage(tmp, outputFile);
     }
 
     public void GlassFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {

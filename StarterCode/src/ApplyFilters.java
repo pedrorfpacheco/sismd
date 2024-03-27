@@ -77,6 +77,14 @@ public class ApplyFilters {
 
                 System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
                 break;
+            case "16":
+                    measureExecutionTime(() -> {
+                        try {
+                            filters.GlassFilterThreadPool("glassThreadPool.jpg", 4);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
             default:
                 System.out.println("\nInvalid filter");
                 break;

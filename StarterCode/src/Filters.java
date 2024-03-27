@@ -1,9 +1,13 @@
+import threadpool.GlassFilterTask;
 import threads.GlassFilterThread;
 import utils.Utils;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Creating image filters for grayscale, brighter, swirl,
@@ -121,6 +125,28 @@ public class Filters {
         }
 
         latch.await();
+    }
+
+    public void GlassFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        int width = tmp.length;
+        int height = tmp[0].length;
+        int radius = 5;
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        int numRowsPerThread = height / numThreads;
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * numRowsPerThread;
+            int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
+            executor.execute(new GlassFilterTask(tmp, width, height, radius, startRow, endRow));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+        Utils.writeImage(tmp, outputFile);
     }
 
 }

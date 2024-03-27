@@ -40,6 +40,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
+        final int numThreads = 4;
 
         switch (filter) {
             case "1":
@@ -69,7 +70,7 @@ public class ApplyFilters {
             case "8":
                 measureExecutionTime(() -> {
                     try {
-                        filters.GrayFilterMultiThread("grayscaleMultiThread.jpg", 4);
+                        filters.GrayFilterMultiThread("grayscaleMultiThread.jpg", numThreads);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -80,7 +81,7 @@ public class ApplyFilters {
             case "10":
                 measureExecutionTime(() -> {
                     try {
-                        filters.GlassFilterMultiThread("glassMultiThread.jpg", 4);
+                        filters.GlassFilterMultiThread("glassMultiThread.jpg", numThreads);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -88,10 +89,21 @@ public class ApplyFilters {
 
                 System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
                 break;
+            case "14":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.GrayFilterThreadPool("grayscaleThreadPool.jpg", numThreads);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("\nGrayscale filter applied to image on file grayscaleThreadPool.jpg");
+                break;
             case "16":
                     measureExecutionTime(() -> {
                         try {
-                            filters.GlassFilterThreadPool("glassThreadPool.jpg", 4);
+                            filters.GlassFilterThreadPool("glassThreadPool.jpg", numThreads);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }

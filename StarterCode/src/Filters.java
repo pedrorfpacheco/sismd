@@ -140,12 +140,16 @@ public class Filters {
 
         CountDownLatch latch = new CountDownLatch(numThreads);
 
-        for (int t = 0; t < numThreads; t++) {
-            Thread thread = new GlassFilterThread(image, width, height, radius, outputfile, latch);
+        int numRowsPerThread = height / numThreads;
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * numRowsPerThread;
+            int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
+            Thread thread = new GlassFilterThread(image, width, height, radius, outputfile, latch, startRow, endRow);
             thread.start();
         }
 
         latch.await();
+        Utils.writeImage(image, outputfile);
     }
 
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {

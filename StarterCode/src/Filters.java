@@ -114,6 +114,38 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
+    public Color Blur(int l, int c) {
+        return new Color(255, 255, 255);
+        //return image[l][c];
+    }
+
+    public boolean BlurCondition(Color pixel) {
+        int r = pixel.getRed();
+
+        return r > 200;
+    }
+
+    // Conditional blur consists in applying Blur only when some
+    // condition is satisfied.
+    public void ConditionalBlurFilter(String outputFile) {
+        Color[][] tmp = Utils.copyImage(image);
+
+        // Runs through entire matrix
+        for (int l = 0; l < tmp.length; l++) {
+            for (int c = 0; c < tmp[l].length; c++) {
+
+                // get current pixel
+                Color pixel = tmp[l][c];
+
+                // Apply blur only when condition is satisfied
+                if (BlurCondition(pixel)) {
+                    tmp[l][c] = Blur(l, c);
+                }
+            }
+        }
+        Utils.writeImage(tmp, outputFile);
+    }
+
     public void GrayFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
         Color[][] tmp = Utils.copyImage(image);
 

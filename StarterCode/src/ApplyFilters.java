@@ -64,8 +64,11 @@ public class ApplyFilters {
                 measureExecutionTime(() -> {
                     filters.GlassFilter("glass.jpg");
                 });
-
-                System.out.println("Glass filter applied to image on file glass.jpg");
+            case "6":
+                measureExecutionTime(() -> {
+                    filters.ConditionalBlurFilter("conditionalBlur.jpg");
+                });
+                System.out.println("Conditional blur filter applied to image on file conditionalBlur.jpg");
                 break;
             case "8":
                 measureExecutionTime(() -> {

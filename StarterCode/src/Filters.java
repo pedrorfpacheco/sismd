@@ -1,5 +1,6 @@
 import threadpool.GlassFilterTask;
 import threadpool.GrayFilterTask;
+import threads.ConditionalBlurThread;
 import threads.GlassFilterThread;
 import threads.GrayFilterThread;
 import utils.Utils;
@@ -10,6 +11,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static utils.Utils.BlurCondition;
+import static utils.Utils.BlurPixel;
 
 /**
  * Creating image filters for grayscale, brighter, swirl,
@@ -114,32 +118,21 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public Color Blur(int l, int c) {
-        return new Color(255, 255, 255);
-        //return image[l][c];
-    }
-
-    public boolean BlurCondition(Color pixel) {
-        int r = pixel.getRed();
-
-        return r > 200;
-    }
-
     // Conditional blur consists in applying Blur only when some
     // condition is satisfied.
     public void ConditionalBlurFilter(String outputFile) {
         Color[][] tmp = Utils.copyImage(image);
 
         // Runs through entire matrix
-        for (int l = 0; l < tmp.length; l++) {
-            for (int c = 0; c < tmp[l].length; c++) {
+        for (int c = 0; c < tmp.length; c++) {
+            for (int l = 0; l < tmp[c].length; l++) {
 
                 // get current pixel
-                Color pixel = tmp[l][c];
+                Color pixel = image[c][l];
 
                 // Apply blur only when condition is satisfied
                 if (BlurCondition(pixel)) {
-                    tmp[l][c] = Blur(l, c);
+                    tmp[c][l] = BlurPixel(image, c, l);
                 }
             }
         }
@@ -182,6 +175,24 @@ public class Filters {
 
         latch.await();
         Utils.writeImage(image, outputfile);
+    }
+
+    public void ConditionalBlurFilterMultiThread(String outputFile, int numThreads) throws InterruptedException {
+        int width = image.length;
+        int height = image[0].length;
+        Color[][] tmp = Utils.copyImage(image);
+        CountDownLatch latch = new CountDownLatch(numThreads);
+
+        int numRowsPerThread = height / numThreads;
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * numRowsPerThread;
+            int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
+            Thread thread = new ConditionalBlurThread(image, tmp, width, height, startRow, endRow, latch);
+            thread.start();
+        }
+
+        latch.await();
+        Utils.writeImage(tmp, outputFile);
     }
 
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {

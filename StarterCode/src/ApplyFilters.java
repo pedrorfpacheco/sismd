@@ -92,6 +92,17 @@ public class ApplyFilters {
 
                 System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
                 break;
+            case "12":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.ConditionalBlurFilterMultiThread("conditionalBlurMultiThread.jpg", numThreads);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("Conditional blur filter applied to image on file conditionalBlurMultiThread.jpg");
+                break;
             case "14":
                 measureExecutionTime(() -> {
                     try {

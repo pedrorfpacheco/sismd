@@ -127,4 +127,14 @@ public class Utils {
     return result;
   }
 
+  public static Color BlurPixel(Color[][] image, int c, int l) {
+    return new Color(255, 255, 255);
+  }
+
+  public static boolean BlurCondition(Color pixel) {
+    int r = pixel.getRed();
+
+    return r > 200;
+  }
+
 }

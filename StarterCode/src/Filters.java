@@ -1,3 +1,4 @@
+import threadpool.ConditionalBlurTask;
 import threadpool.GlassFilterTask;
 import threadpool.GrayFilterTask;
 import threads.ConditionalBlurThread;
@@ -187,7 +188,7 @@ public class Filters {
         for (int i = 0; i < numThreads; i++) {
             int startRow = i * numRowsPerThread;
             int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
-            Thread thread = new ConditionalBlurThread(image, tmp, width, height, startRow, endRow, latch);
+            Thread thread = new ConditionalBlurThread(image, tmp, width, startRow, endRow, latch);
             thread.start();
         }
 
@@ -227,6 +228,27 @@ public class Filters {
             int startRow = i * numRowsPerThread;
             int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
             executor.execute(new GlassFilterTask(tmp, width, height, radius, startRow, endRow));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+        Utils.writeImage(tmp, outputFile);
+    }
+
+    public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads) throws InterruptedException {
+        Color[][] tmp = Utils.copyImage(image);
+
+        int width = tmp.length;
+        int height = tmp[0].length;
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        int numRowsPerTask = height / numThreads;
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * numRowsPerTask;
+            int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerTask;
+            executor.execute(new ConditionalBlurTask(image, tmp, width, startRow, endRow));
         }
 
         executor.shutdown();

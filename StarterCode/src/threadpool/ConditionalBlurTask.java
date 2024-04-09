@@ -1,32 +1,23 @@
-package threads;
+package threadpool;
 
 import java.awt.*;
-import java.util.concurrent.CountDownLatch;
 
 import static utils.Utils.BlurCondition;
 import static utils.Utils.BlurPixel;
 
-public class ConditionalBlurThread extends Thread {
-
+public class ConditionalBlurTask implements Runnable {
     private final Color[][] image;
-
     private final Color[][] tmp;
-
     private final int width;
-
     private final int startRow;
-
     private final int endRow;
 
-    CountDownLatch latch;
-
-    public ConditionalBlurThread(Color[][] image, Color[][] tmp, int width, int startRow, int endRow, CountDownLatch latch) {
+    public ConditionalBlurTask(Color[][] image, Color[][] tmp, int width, int startRow, int endRow) {
         this.image = image;
         this.tmp = tmp;
         this.width = width;
         this.startRow = startRow;
         this.endRow = endRow;
-        this.latch = latch;
     }
 
     @Override
@@ -39,6 +30,5 @@ public class ConditionalBlurThread extends Thread {
                 }
             }
         }
-        latch.countDown();
     }
 }

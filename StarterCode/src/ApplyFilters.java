@@ -122,6 +122,17 @@ public class ApplyFilters {
                             throw new RuntimeException(e);
                         }
                     });
+            case "18":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.ConditionalBlurFilterThreadPool("conditionalBlurThreadPool.jpg", numThreads);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("\nConditional blur filter applied to image on file conditionalBlurThreadPool.jpg");
+                break;
             default:
                 System.out.println("\nInvalid filter");
                 break;

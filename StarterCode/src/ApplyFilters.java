@@ -40,7 +40,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 4;
+        final int numThreads = 9;
 
         switch (filter) {
             case "1":
@@ -115,13 +115,14 @@ public class ApplyFilters {
                 System.out.println("\nGrayscale filter applied to image on file grayscaleThreadPool.jpg");
                 break;
             case "16":
-                    measureExecutionTime(() -> {
-                        try {
-                            filters.GlassFilterThreadPool("glassThreadPool.jpg", numThreads);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                measureExecutionTime(() -> {
+                    try {
+                        filters.GlassFilterThreadPool("glassThreadPool.jpg", numThreads);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
             case "18":
                 measureExecutionTime(() -> {
                     try {

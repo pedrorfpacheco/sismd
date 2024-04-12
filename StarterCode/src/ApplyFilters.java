@@ -40,7 +40,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 9;
+        final int numThreads = 8;
 
         switch (filter) {
             case "1":

@@ -5,25 +5,27 @@ import java.awt.*;
 public class GrayFilterThread extends Thread {
     private Color[][] image;
     private int width;
-    private int height;
-    private int startIndex;
-    private int step;
+    private int startRow;
+    private int endRow;
 
-    public GrayFilterThread(Color[][] image, int width, int height, int startIndex, int step) {
+    public GrayFilterThread(Color[][] image, int width, int startRow, int endRow) {
         this.image = image;
         this.width = width;
-        this.height = height;
-        this.startIndex = startIndex;
-        this.step = step;
+        this.startRow = startRow;
+        this.endRow = endRow;
     }
 
     @Override
     public void run() {
-        for (int i = startIndex; i < width; i += step) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = startRow; j < endRow; j++) {
                 Color pixel = image[i][j];
 
-                int a = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+                int r = pixel.getRed();
+                int g = pixel.getGreen();
+                int b = pixel.getBlue();
+
+                int a = (r + g + b) / 3;
 
                 image[i][j] = new Color(a, a, a);
             }

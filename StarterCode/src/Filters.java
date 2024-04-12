@@ -141,22 +141,27 @@ public class Filters {
     }
 
     public void GrayFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
-        Color[][] tmp = Utils.copyImage(image);
-
-        int width = tmp.length;
-        int height = tmp[0].length;
+        int width = image.length;
+        int height = image[0].length;
 
         Thread[] threads = new Thread[numThreads];
+        int rowsPerThread = height / numThreads;
+        int remainingRows = height % numThreads;
+
+        int startRow = 0;
         for (int i = 0; i < numThreads; i++) {
-            threads[i] = new GrayFilterThread(tmp, width, height, i, numThreads);
+            int rowsForThisThread = rowsPerThread + (i < remainingRows ? 1 : 0);
+            int endRow = startRow + rowsForThisThread;
+            threads[i] = new GrayFilterThread(image, width, startRow, endRow);
             threads[i].start();
+            startRow = endRow;
         }
 
         for (Thread thread : threads) {
             thread.join();
         }
 
-        Utils.writeImage(tmp, outputfile);
+        Utils.writeImage(image, outputfile);
     }
 
     public void GlassFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
@@ -197,43 +202,51 @@ public class Filters {
     }
 
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
-        Color[][] tmp = Utils.copyImage(image);
-
-        int width = tmp.length;
-        int height = tmp[0].length;
+        int width = image.length;
+        int height = image[0].length;
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
+        int rowsPerTask = height / numThreads;
+        int remainingRows = height % numThreads;
+
+        int startRow = 0;
         for (int i = 0; i < numThreads; i++) {
-            executor.execute(new GrayFilterTask(tmp, width, height, i, numThreads));
+            int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
+            int endRow = startRow + rowsForThisTask;
+            executor.execute(new GrayFilterTask(image, width, startRow, endRow));
+            startRow = endRow;
         }
 
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        Utils.writeImage(tmp, outputFile);
+        Utils.writeImage(image, outputFile);
     }
 
     public void GlassFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
-        Color[][] tmp = Utils.copyImage(image);
-
-        int width = tmp.length;
-        int height = tmp[0].length;
+        int width = image.length;
+        int height = image[0].length;
         int radius = 5;
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
-        int numRowsPerThread = height / numThreads;
+        int rowsPerTask = height / numThreads;
+        int remainingRows = height % numThreads;
+
+        int startRow = 0;
         for (int i = 0; i < numThreads; i++) {
-            int startRow = i * numRowsPerThread;
-            int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
-            executor.execute(new GlassFilterTask(tmp, width, height, radius, startRow, endRow));
+            int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
+            int endRow = startRow + rowsForThisTask;
+            executor.execute(new GlassFilterTask(image, width, height, radius, startRow, endRow));
+            startRow = endRow;
         }
 
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        Utils.writeImage(tmp, outputFile);
+        Utils.writeImage(image, outputFile);
+
     }
 
     public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads) throws InterruptedException {

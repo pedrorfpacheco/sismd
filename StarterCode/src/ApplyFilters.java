@@ -64,6 +64,7 @@ public class ApplyFilters {
                 measureExecutionTime(() -> {
                     filters.GlassFilter("glass.jpg");
                 });
+                break;
             case "6":
                 measureExecutionTime(() -> {
                     filters.ConditionalBlurFilter("conditionalBlur.jpg");

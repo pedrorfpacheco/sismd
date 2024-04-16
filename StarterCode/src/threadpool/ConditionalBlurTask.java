@@ -11,13 +11,15 @@ public class ConditionalBlurTask implements Runnable {
     private final int width;
     private final int startRow;
     private final int endRow;
+    private final int matrixSize;
 
-    public ConditionalBlurTask(Color[][] image, Color[][] tmp, int width, int startRow, int endRow) {
+    public ConditionalBlurTask(Color[][] image, Color[][] tmp, int width, int startRow, int endRow, int matrixSize) {
         this.image = image;
         this.tmp = tmp;
         this.width = width;
         this.startRow = startRow;
         this.endRow = endRow;
+        this.matrixSize = matrixSize;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class ConditionalBlurTask implements Runnable {
             for (int l = startRow; l < endRow; l++) {
                 Color pixel = image[c][l];
                 if (BlurCondition(pixel)) {
-                    tmp[c][l] = BlurPixel(image, c, l);
+                    tmp[c][l] = BlurPixel(image, c, l, matrixSize);
                 }
             }
         }

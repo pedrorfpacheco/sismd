@@ -122,7 +122,7 @@ public class Filters {
 
     // Conditional blur consists in applying Blur only when some
     // condition is satisfied.
-    public void ConditionalBlurFilter(String outputFile) {
+    public void ConditionalBlurFilter(String outputFile, int matrixSize) {
         Color[][] tmp = copyImage(image);
 
         // Runs through entire matrix
@@ -134,7 +134,7 @@ public class Filters {
 
                 // Apply blur only when condition is satisfied
                 if (BlurCondition(pixel)) {
-                    tmp[c][l] = BlurPixel(image, c, l);
+                    tmp[c][l] = BlurPixel(image, c, l, matrixSize);
                 }
             }
         }
@@ -184,7 +184,7 @@ public class Filters {
         Utils.writeImage(image, outputfile);
     }
 
-    public void ConditionalBlurFilterMultiThread(String outputFile, int numThreads) throws InterruptedException {
+    public void ConditionalBlurFilterMultiThread(String outputFile, int numThreads, int matrixSize) throws InterruptedException {
         int width = image.length;
         int height = image[0].length;
         Color[][] tmp = copyImage(image);
@@ -194,7 +194,7 @@ public class Filters {
         for (int i = 0; i < numThreads; i++) {
             int startRow = i * numRowsPerThread;
             int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerThread;
-            Thread thread = new ConditionalBlurThread(image, tmp, width, startRow, endRow, latch);
+            Thread thread = new ConditionalBlurThread(image, tmp, width, startRow, endRow, latch, matrixSize);
             thread.start();
         }
 
@@ -250,7 +250,7 @@ public class Filters {
 
     }
 
-    public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads) throws InterruptedException {
+    public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads, int matrixSize) throws InterruptedException {
         Color[][] tmp = copyImage(image);
 
         int width = tmp.length;
@@ -262,7 +262,7 @@ public class Filters {
         for (int i = 0; i < numThreads; i++) {
             int startRow = i * numRowsPerTask;
             int endRow = (i == numThreads - 1) ? height : (i + 1) * numRowsPerTask;
-            executor.execute(new ConditionalBlurTask(image, tmp, width, startRow, endRow));
+            executor.execute(new ConditionalBlurTask(image, tmp, width, startRow, endRow, matrixSize));
         }
 
         executor.shutdown();

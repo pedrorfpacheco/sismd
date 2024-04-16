@@ -77,7 +77,7 @@ public class ApplyFilters {
                 break;
             case "6":
                 measureExecutionTime(() -> {
-                    filters.ConditionalBlurFilter("conditionalBlur.jpg");
+                    filters.ConditionalBlurFilter("conditionalBlur.jpg", matrixSizeForBlur);
                 });
                 System.out.println("Conditional blur filter applied to image on file conditionalBlur.jpg");
                 break;
@@ -117,7 +117,7 @@ public class ApplyFilters {
             case "12":
                 measureExecutionTime(() -> {
                     try {
-                        filters.ConditionalBlurFilterMultiThread("conditionalBlurMultiThread.jpg", numThreads);
+                        filters.ConditionalBlurFilterMultiThread("conditionalBlurMultiThread.jpg", numThreads, matrixSizeForBlur);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -158,7 +158,7 @@ public class ApplyFilters {
             case "18":
                 measureExecutionTime(() -> {
                     try {
-                        filters.ConditionalBlurFilterThreadPool("conditionalBlurThreadPool.jpg", numThreads);
+                        filters.ConditionalBlurFilterThreadPool("conditionalBlurThreadPool.jpg", numThreads, matrixSizeForBlur);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

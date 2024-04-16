@@ -7,26 +7,22 @@ import static utils.Utils.BlurCondition;
 import static utils.Utils.BlurPixel;
 
 public class ConditionalBlurThread extends Thread {
-
     private final Color[][] image;
-
     private final Color[][] tmp;
-
     private final int width;
-
     private final int startRow;
-
     private final int endRow;
-
     CountDownLatch latch;
+    private final int matrixSize;
 
-    public ConditionalBlurThread(Color[][] image, Color[][] tmp, int width, int startRow, int endRow, CountDownLatch latch) {
+    public ConditionalBlurThread(Color[][] image, Color[][] tmp, int width, int startRow, int endRow, CountDownLatch latch, int matrixSize) {
         this.image = image;
         this.tmp = tmp;
         this.width = width;
         this.startRow = startRow;
         this.endRow = endRow;
         this.latch = latch;
+        this.matrixSize = matrixSize;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class ConditionalBlurThread extends Thread {
             for (int l = startRow; l < endRow; l++) {
                 Color pixel = image[c][l];
                 if (BlurCondition(pixel)) {
-                    tmp[c][l] = BlurPixel(image, c, l);
+                    tmp[c][l] = BlurPixel(image, c, l, matrixSize);
                 }
             }
         }

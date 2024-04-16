@@ -127,14 +127,39 @@ public class Utils {
     return result;
   }
 
-  public static Color BlurPixel(Color[][] image, int c, int l) {
-    return new Color(255, 255, 255);
+  public static Color BlurPixel(Color[][] image, int c, int l, int matrixSize) {
+    int width = image.length;
+    int height = image[0].length;
+    int offset = matrixSize / 2;
+
+        int redSum = 0, greenSum = 0, blueSum = 0;
+        int count = 0;
+
+        for (int kc = -offset; kc <= offset; kc++) {
+          for (int kl = -offset; kl <= offset; kl++) {
+            int nc = c + kc;
+            int nl= l + kl;
+
+            if (nc >= 0 && nc < width && nl >= 0 && nl < height) {
+              Color neighborColor = image[nc][nl];
+              redSum += neighborColor.getRed();
+              greenSum += neighborColor.getGreen();
+              blueSum += neighborColor.getBlue();
+              count++;
+            }
+          }
+        }
+        int avgRed = redSum / count;
+        int avgGreen = greenSum / count;
+        int avgBlue = blueSum / count;
+
+        return new Color(avgRed, avgGreen, avgBlue);
   }
 
   public static boolean BlurCondition(Color pixel) {
     int r = pixel.getRed();
 
-    return r > 200;
+    return r > 100;
   }
 
 }

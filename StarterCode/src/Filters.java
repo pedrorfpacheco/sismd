@@ -1,6 +1,7 @@
 import threadpool.ConditionalBlurTask;
 import threadpool.GlassFilterTask;
 import threadpool.GrayFilterTask;
+import threads.BlurFilterThread;
 import threads.ConditionalBlurThread;
 import threads.GlassFilterThread;
 import threads.GrayFilterThread;
@@ -13,8 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static utils.Utils.BlurCondition;
-import static utils.Utils.BlurPixel;
+import static utils.Utils.*;
 
 /**
  * Creating image filters for grayscale, brighter, swirl,
@@ -39,7 +39,7 @@ public class Filters {
     // Brighter filter works by adding value to each of the red, green and blue of each pixel
     // up to the maximum of 255
     public void BrighterFilter(String outputFile, int value) throws IOException {
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
 
         // Runs through entire matrix
         for (int i = 0; i < tmp.length; i++) {
@@ -75,7 +75,7 @@ public class Filters {
     }
 
     public void GrayScaleFilter(String outputFile) {
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
 
         // Runs through entire matrix
         for (int i = 0; i < tmp.length; i++) {
@@ -98,7 +98,7 @@ public class Filters {
     }
 
     public void GlassFilter(String outputFile) {
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
 
         int width = tmp.length;
         int height = tmp[0].length;
@@ -122,7 +122,7 @@ public class Filters {
     // Conditional blur consists in applying Blur only when some
     // condition is satisfied.
     public void ConditionalBlurFilter(String outputFile) {
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
 
         // Runs through entire matrix
         for (int c = 0; c < tmp.length; c++) {
@@ -186,7 +186,7 @@ public class Filters {
     public void ConditionalBlurFilterMultiThread(String outputFile, int numThreads) throws InterruptedException {
         int width = image.length;
         int height = image[0].length;
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
         CountDownLatch latch = new CountDownLatch(numThreads);
 
         int numRowsPerThread = height / numThreads;
@@ -250,7 +250,7 @@ public class Filters {
     }
 
     public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads) throws InterruptedException {
-        Color[][] tmp = Utils.copyImage(image);
+        Color[][] tmp = copyImage(image);
 
         int width = tmp.length;
         int height = tmp[0].length;
@@ -270,4 +270,67 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
+
+    public void BlurFilterMultiThread(String outputFile,int matrixSize, int threadCount) throws InterruptedException{
+        Color[][] blurredImage = new Color[image.length][image[0].length];
+        Thread[] threads = new Thread[threadCount];
+        int height = image.length;
+        int chunkHeight = (height + threadCount - 1) / threadCount; // Divide equally among threads, rounding up
+
+        for (int i = 0; i < threadCount; i++) {
+            int startRow = i * chunkHeight;
+            int endRow = Math.min(startRow + chunkHeight, height);
+
+            threads[i] = new BlurFilterThread(image, blurredImage, startRow, endRow, matrixSize);
+            threads[i].start();
+        }
+
+        for (Thread t : threads) {
+            t.join(); // Wait for all threads to finish
+        }
+
+        Utils.writeImage(blurredImage, outputFile);
+    }
+
+    public void BlurFilter(String outputFile,int matrixSize) {
+        Color[][] blurredImage = copyImage(image);
+        int height = image.length;
+        int width = image[0].length;
+        int offset = matrixSize / 2;
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int redSum = 0, greenSum = 0, blueSum = 0;
+                int count = 0;
+
+                // Iterate over the m x m submatrix centered at (i, j)
+                for (int ki = -offset; ki <= offset; ki++) {
+                    for (int kj = -offset; kj <= offset; kj++) {
+                        int ni = i + ki; // New i index
+                        int nj = j + kj; // New j index
+
+                        // Check if the new indices are within the image bounds
+                        if (ni >= 0 && ni < height && nj >= 0 && nj < width) {
+                            Color neighborColor = image[ni][nj];
+                            redSum += neighborColor.getRed();
+                            greenSum += neighborColor.getGreen();
+                            blueSum += neighborColor.getBlue();
+                            count++;
+                        }
+                    }
+                }
+
+                // Calculate average values
+                int avgRed = redSum / count;
+                int avgGreen = greenSum / count;
+                int avgBlue = blueSum / count;
+
+                // Apply the new color to the blurred image
+                blurredImage[i][j] = new Color(avgRed, avgGreen, avgBlue);
+            }
+        }
+
+        Utils.writeImage(blurredImage, outputFile);
+
+    }
 }

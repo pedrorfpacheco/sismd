@@ -1,5 +1,8 @@
+import java.awt.*;
 import java.io.IOException;
 import java.util.Scanner;
+
+import static utils.Utils.copyImage;
 
 public class ApplyFilters {
 
@@ -65,6 +68,12 @@ public class ApplyFilters {
                     filters.GlassFilter("glass.jpg");
                 });
                 break;
+            case "5":
+                measureExecutionTime(() -> {
+                    filters.BlurFilter("blur.jpg",/*MatrixSize*/ 9);
+                });
+                System.out.println("Blur filter applied to image on file blur.jpg");
+                break;
             case "6":
                 measureExecutionTime(() -> {
                     filters.ConditionalBlurFilter("conditionalBlur.jpg");
@@ -92,6 +101,17 @@ public class ApplyFilters {
                 });
 
                 System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
+                break;
+            case "11":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.BlurFilterMultiThread("blurMultithread.jpg",/*matrixSize*/ 9, numThreads);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                System.out.println("Blur filter applied to image on file blurMultithread.jpg");
                 break;
             case "12":
                 measureExecutionTime(() -> {

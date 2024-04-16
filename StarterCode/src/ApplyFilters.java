@@ -43,7 +43,8 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 8;
+        final int numThreads = 4;
+        final int matrixSizeForBlur=6;
 
         switch (filter) {
             case "1":
@@ -70,7 +71,7 @@ public class ApplyFilters {
                 break;
             case "5":
                 measureExecutionTime(() -> {
-                    filters.BlurFilter("blur.jpg",/*MatrixSize*/ 9);
+                    filters.BlurFilter("blur.jpg",matrixSizeForBlur);
                 });
                 System.out.println("Blur filter applied to image on file blur.jpg");
                 break;
@@ -105,7 +106,7 @@ public class ApplyFilters {
             case "11":
                 measureExecutionTime(() -> {
                     try {
-                        filters.BlurFilterMultiThread("blurMultithread.jpg",/*matrixSize*/ 9, numThreads);
+                        filters.BlurFilterMultiThread("blurMultithread.jpg",matrixSizeForBlur, numThreads);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -143,6 +144,16 @@ public class ApplyFilters {
                         throw new RuntimeException(e);
                     }
                 });
+                break;
+            case "17":
+                measureExecutionTime(() -> {
+                    try {
+                        filters.BlurFilterThreadPool("blurThreadPool.jpg",matrixSizeForBlur,numThreads);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                System.out.println("\nBlur filter applied to image on file blurThreadPool.jpg");
                 break;
             case "18":
                 measureExecutionTime(() -> {

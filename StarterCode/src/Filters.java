@@ -1,3 +1,4 @@
+import threadpool.BlurFilterTask;
 import threadpool.ConditionalBlurTask;
 import threadpool.GlassFilterTask;
 import threadpool.GrayFilterTask;
@@ -333,4 +334,25 @@ public class Filters {
         Utils.writeImage(blurredImage, outputFile);
 
     }
+
+
+    public void BlurFilterThreadPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+        Color[][] blurredImage = new Color[image.length][image[0].length];
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        int height = image.length;
+        int chunkHeight = (height + numThreads - 1) / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * chunkHeight;
+            int endRow = Math.min(startRow + chunkHeight, height);
+
+            executor.execute(new BlurFilterTask(image, blurredImage, startRow, endRow, matrixSize));
+        }
+
+        executor.shutdown(); // No new tasks will be accepted
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // Wait for all tasks to finish
+
+        Utils.writeImage(blurredImage, outputFile);
+    }
 }
+

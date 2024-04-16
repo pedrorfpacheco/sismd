@@ -293,7 +293,7 @@ public class Filters {
     }
 
     public void BlurFilter(String outputFile,int matrixSize) {
-        Color[][] blurredImage = copyImage(image);
+        Color[][] blurredImage = new Color[image.length][image[0].length];
         int height = image.length;
         int width = image[0].length;
         int offset = matrixSize / 2;

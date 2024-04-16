@@ -159,7 +159,7 @@ public class Utils {
   public static boolean BlurCondition(Color pixel) {
     int r = pixel.getRed();
 
-    return r > 100;
+    return r > 50;
   }
 
 }

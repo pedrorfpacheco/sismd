@@ -123,21 +123,27 @@ public class Filters {
     // Conditional blur consists in applying Blur only when some
     // condition is satisfied.
     public void ConditionalBlurFilter(String outputFile, int matrixSize) {
-        Color[][] tmp = copyImage(image);
+        int width = image.length;
+        int height = image[0].length;
+        Color[][] tmp = new Color[width][height];
 
         // Runs through entire matrix
-        for (int c = 0; c < tmp.length; c++) {
-            for (int l = 0; l < tmp[c].length; l++) {
+        for (int c = 0; c < width; c++) {
+            for (int l = 0; l < height; l++) {
 
                 // get current pixel
                 Color pixel = image[c][l];
 
                 // Apply blur only when condition is satisfied
                 if (BlurCondition(pixel)) {
-                    tmp[c][l] = BlurPixel(image, c, l, matrixSize);
+                    pixel = BlurPixel(image, c, l, matrixSize);
                 }
+
+                // Save pixel to new image
+                tmp[c][l] = pixel;
             }
         }
+        // Save new image to file
         Utils.writeImage(tmp, outputFile);
     }
 
@@ -187,7 +193,7 @@ public class Filters {
     public void ConditionalBlurFilterMultiThread(String outputFile, int numThreads, int matrixSize) throws InterruptedException {
         int width = image.length;
         int height = image[0].length;
-        Color[][] tmp = copyImage(image);
+        Color[][] tmp = new Color[width][height];
         CountDownLatch latch = new CountDownLatch(numThreads);
 
         int numRowsPerThread = height / numThreads;
@@ -251,10 +257,9 @@ public class Filters {
     }
 
     public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads, int matrixSize) throws InterruptedException {
-        Color[][] tmp = copyImage(image);
-
-        int width = tmp.length;
-        int height = tmp[0].length;
+        int width = image.length;
+        int height = image[0].length;
+        Color[][] tmp = new Color[width][height];
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 

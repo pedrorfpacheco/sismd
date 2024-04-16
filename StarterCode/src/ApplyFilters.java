@@ -1,8 +1,5 @@
-import java.awt.*;
 import java.io.IOException;
 import java.util.Scanner;
-
-import static utils.Utils.copyImage;
 
 public class ApplyFilters {
 
@@ -43,8 +40,8 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 4;
-        final int matrixSizeForBlur=6;
+        final int numThreads = 5;
+        final int matrixSizeForBlur=3;
 
         switch (filter) {
             case "1":

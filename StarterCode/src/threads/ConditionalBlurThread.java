@@ -30,9 +30,12 @@ public class ConditionalBlurThread extends Thread {
         for (int c = 0; c < width; c++) {
             for (int l = startRow; l < endRow; l++) {
                 Color pixel = image[c][l];
+
                 if (BlurCondition(pixel)) {
-                    tmp[c][l] = BlurPixel(image, c, l, matrixSize);
+                    pixel = BlurPixel(image, c, l, matrixSize);
                 }
+
+                tmp[c][l] = pixel;
             }
         }
         latch.countDown();

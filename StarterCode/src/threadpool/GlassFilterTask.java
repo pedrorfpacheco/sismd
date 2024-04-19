@@ -4,32 +4,28 @@ import java.awt.*;
 
 public class GlassFilterTask implements Runnable {
     private Color[][] image;
-    private int width;
-    private int height;
-    private int radius;
+    private Color[][] destination;
+    private int[][] dx;
+    private int[][] dy;
     private int startRow;
     private int endRow;
 
-    public GlassFilterTask(Color[][] image, int width, int height, int radius, int startRow, int endRow) {
+    public GlassFilterTask(Color[][] image, Color[][] destination, int[][] dx, int[][] dy, int startRow, int endRow) {
         this.image = image;
-        this.width = width;
-        this.height = height;
-        this.radius = radius;
+        this.destination = destination;
+        this.dx = dx;
+        this.dy = dy;
         this.startRow = startRow;
         this.endRow = endRow;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < width; i++) {
-            for (int j = startRow; j < endRow; j++) {
-                int dx = (int) (Math.random() * radius * 2 - radius);
-                int dy = (int) (Math.random() * radius * 2 - radius);
-                int newX = i + dx;
-                int newY = j + dy;
-                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
-                    image[i][j] = image[newX][newY];
-                }
+        for (int i = startRow; i < endRow; i++) {
+            for (int j = 0; j < image[0].length; j++) {
+                int newI = Math.min(Math.max(i + dx[i][j], 0), image.length - 1);
+                int newJ = Math.min(Math.max(j + dy[i][j], 0), image[0].length - 1);
+                destination[i][j] = image[newI][newJ];
             }
         }
     }

@@ -10,6 +10,7 @@ import utils.Utils;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -221,7 +222,7 @@ public class Filters {
         for (int i = 0; i < numThreads; i++) {
             int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
             int endRow = startRow + rowsForThisTask;
-            executor.execute(new GrayFilterTask(image, width, startRow, endRow));
+            executor.submit(new GrayFilterTask(image, width, startRow, endRow));
             startRow = endRow;
         }
 
@@ -234,18 +235,31 @@ public class Filters {
     public void GlassFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
         int width = image.length;
         int height = image[0].length;
+
+        Color[][] glassImage = new Color[width][height];
+
         int radius = 5;
+        int startRow = 0;
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
         int rowsPerTask = height / numThreads;
         int remainingRows = height % numThreads;
 
-        int startRow = 0;
+        int[][] dx = new int[width][height];
+        int[][] dy = new int[width][height];
+        Random rand = new Random();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                dx[i][j] = (rand.nextInt(2 * radius + 1) - radius);
+                dy[i][j] = (rand.nextInt(2 * radius + 1) - radius);
+            }
+        }
+
         for (int i = 0; i < numThreads; i++) {
             int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
             int endRow = startRow + rowsForThisTask;
-            executor.execute(new GlassFilterTask(image, width, height, radius, startRow, endRow));
+            executor.submit(new GlassFilterTask(image, glassImage, dx, dy, startRow, endRow));
             startRow = endRow;
         }
 
@@ -253,7 +267,6 @@ public class Filters {
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         Utils.writeImage(image, outputFile);
-
     }
 
     public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads, int matrixSize) throws InterruptedException {

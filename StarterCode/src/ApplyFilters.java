@@ -9,28 +9,14 @@ public class ApplyFilters {
         System.out.println("Insert the name of the file path you would like to use.");
         String filePath = input.nextLine();
 
-        System.out.println("\nInsert what filter you would like to apply to the image." +
-                "\n-----Filters with Sequential Implementation-----" +
-                "\n1. Brighter Filter" +
-                "\n2. GrayScale Filter" +
-                "\n3. Swirl Filter" +
-                "\n4. Glass Filter" +
-                "\n5. Blur Filter" +
-                "\n6. Conditional Blur Filter" +
-                "\n\n-----Filters with MultiThread Implementation-----" +
-                "\n7. Brighter Filter" +
-                "\n8. GrayScale Filter" +
-                "\n9. Swirl Filter" +
-                "\n10. Glass Filter" +
-                "\n11. Blur Filter" +
-                "\n12. Conditional Blur Filter" +
-                "\n\n-----Filter with ThreadPool Implementation-----" +
-                "\n13. Brighter Filter" +
-                "\n14. GrayScale Filter" +
-                "\n15. Swirl Filter" +
-                "\n16. Glass Filter" +
-                "\n17. Blur Filter" +
-                "\n18. Conditional Blur Filter");
+        System.out.format("|     Sequential      |     MultiThread      |                             Threadpool                             | %n");
+        System.out.format("|---------------------|----------------------|       Executor       |     ForkJoinPool     |  CompletableFilters  |%n");
+        System.out.format("| 1. Brighter         | 7. Brighter          | 13. Brighter         | 19. Brighter         | 25. Brighter         |%n");
+        System.out.format("| 2. GrayScale        | 8. GrayScale         | 14. GrayScale        | 20. GrayScale        | 26. GrayScale        |%n");
+        System.out.format("| 3. Swirl            | 9. Swirl             | 15. Swirl            | 21. Swirl            | 27. Swirl            |%n");
+        System.out.format("| 4. Glass            | 10. Glass            | 16. Glass            | 22. Glass            | 28. Glass            |%n");
+        System.out.format("| 5. Blur             | 11. Blur             | 17. Blur             | 23. Blur             | 29. Blur             |%n");
+        System.out.format("| 6. Conditional Blur | 12. Conditional Blur | 18. Conditional Blur | 24. Conditional Blur | 30. Conditional Blur |%n");
 
         String filter = input.nextLine();
         input.close();
@@ -40,7 +26,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 5;
+        final int numThreads = 8;
         final int matrixSizeForBlur=3;
 
         switch (filter) {

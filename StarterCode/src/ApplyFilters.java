@@ -1,9 +1,10 @@
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class ApplyFilters {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 
         Scanner input = new Scanner(System.in);
         System.out.println("Insert the name of the file path you would like to use.");
@@ -25,7 +26,7 @@ public class ApplyFilters {
         applyFilter(filter, filePath);
     }
 
-    public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
+    public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException, ExecutionException {
         Filters filters = new Filters(filePath);
         final int numThreads = 8;
         final int matrixSizeForBlur = 3;
@@ -181,6 +182,17 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime22 - startTime22) + " milliseconds");
 
                 System.out.println("\nGlass filter applied to image on file glassForkJoinPool.jpg");
+                break;
+
+            case "26":
+                long startTime26 = System.currentTimeMillis();
+
+                filters.GrayFilterCompletableFuture("grayscaleCompletableFutures.jpg", numThreads);
+
+                long endTime26 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime26 - startTime26) + " milliseconds");
+
+                System.out.println("\nGrayscale filter applied to image on file grayscaleCompletableFutures.jpg");
                 break;
             default:
                 System.out.println("\nInvalid filter");

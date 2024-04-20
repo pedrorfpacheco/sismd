@@ -2,6 +2,7 @@ import threadpool.Executor.BlurFilterTask;
 import threadpool.Executor.ConditionalBlurTask;
 import threadpool.Executor.GlassFilterTask;
 import threadpool.Executor.GrayFilterTask;
+import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
 import threads.BlurFilterThread;
 import threads.ConditionalBlurThread;
@@ -381,6 +382,16 @@ public class Filters {
         pool.invoke(task);
 
         Utils.writeImage(grayImage, outputFile);
+    }
+
+    public void GlassFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
+        Color[][] glassImage = new Color[image.length][image[0].length];
+        ForkJoinPool pool = new ForkJoinPool(numThreads);
+        GlassFilterForkJoinPoolTask task = new GlassFilterForkJoinPoolTask(image, glassImage, 0, image.length);
+
+        pool.invoke(task);
+
+        Utils.writeImage(glassImage, outputFile);
     }
 }
 

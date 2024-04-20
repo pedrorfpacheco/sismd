@@ -9,6 +9,7 @@ public class ApplyFilters {
         System.out.println("Insert the name of the file path you would like to use.");
         String filePath = input.nextLine();
 
+        System.out.println("\nChoose a filter to apply to the image:");
         System.out.format("|     Sequential      |     MultiThread      |                             Threadpool                             | %n");
         System.out.format("|---------------------|----------------------|       Executor       |     ForkJoinPool     |  CompletableFilters  |%n");
         System.out.format("| 1. Brighter         | 7. Brighter          | 13. Brighter         | 19. Brighter         | 25. Brighter         |%n");
@@ -16,7 +17,7 @@ public class ApplyFilters {
         System.out.format("| 3. Swirl            | 9. Swirl             | 15. Swirl            | 21. Swirl            | 27. Swirl            |%n");
         System.out.format("| 4. Glass            | 10. Glass            | 16. Glass            | 22. Glass            | 28. Glass            |%n");
         System.out.format("| 5. Blur             | 11. Blur             | 17. Blur             | 23. Blur             | 29. Blur             |%n");
-        System.out.format("| 6. Conditional Blur | 12. Conditional Blur | 18. Conditional Blur | 24. Conditional Blur | 30. Conditional Blur |%n");
+        System.out.format("| 6. Conditional Blur | 12. Conditional Blur | 18. Conditional Blur | 24. Conditional Blur | 30. Conditional Blur |%n\n");
 
         String filter = input.nextLine();
         input.close();
@@ -169,6 +170,17 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime20 - startTime20) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleForkJoinPool.jpg");
+                break;
+
+            case "22":
+                long startTime22 = System.currentTimeMillis();
+
+                filters.GlassFilterForkJoinPool("glassForkJoinPool.jpg", numThreads);
+
+                long endTime22 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime22 - startTime22) + " milliseconds");
+
+                System.out.println("\nGlass filter applied to image on file glassForkJoinPool.jpg");
                 break;
             default:
                 System.out.println("\nInvalid filter");

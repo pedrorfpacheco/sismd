@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.concurrent.RecursiveAction;
 
 public class GrayFilterForkJoinPoolTask extends RecursiveAction {
-    private static final int THRESHOLD = 10000;
+    private static final int THRESHOLD = 1000;
 
     private Color[][] image;
     private Color[][] destination;
@@ -24,8 +24,10 @@ public class GrayFilterForkJoinPoolTask extends RecursiveAction {
             applyFilter();
         } else {
             int midRow = (startRow + endRow) / 2;
+
             GrayFilterForkJoinPoolTask task1 = new GrayFilterForkJoinPoolTask(image, destination, startRow, midRow);
             GrayFilterForkJoinPoolTask task2 = new GrayFilterForkJoinPoolTask(image, destination, midRow, endRow);
+
             invokeAll(task1, task2);
         }
     }
@@ -34,7 +36,9 @@ public class GrayFilterForkJoinPoolTask extends RecursiveAction {
         for (int i = startRow; i < endRow; i++) {
             for (int j = 0; j < image[0].length; j++) {
                 Color color = image[i][j];
+
                 int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+
                 destination[i][j] = new Color(gray, gray, gray);
             }
         }

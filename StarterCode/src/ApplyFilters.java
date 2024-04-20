@@ -161,7 +161,6 @@ public class ApplyFilters {
 
                 System.out.println("\nConditional blur filter applied to image on file conditionalBlurThreadPool.jpg");
                 break;
-
             case "20":
                 long startTime20 = System.currentTimeMillis();
 
@@ -172,7 +171,6 @@ public class ApplyFilters {
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleForkJoinPool.jpg");
                 break;
-
             case "22":
                 long startTime22 = System.currentTimeMillis();
 
@@ -183,7 +181,6 @@ public class ApplyFilters {
 
                 System.out.println("\nGlass filter applied to image on file glassForkJoinPool.jpg");
                 break;
-
             case "26":
                 long startTime26 = System.currentTimeMillis();
 
@@ -193,6 +190,16 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime26 - startTime26) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleCompletableFutures.jpg");
+                break;
+            case "28":
+                long startTime28 = System.currentTimeMillis();
+
+                filters.GlassFilterCompletableFuture("glassCompletableFutures.jpg", numThreads);
+
+                long endTime28 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime28 - startTime28) + " milliseconds");
+
+                System.out.println("\nGlass filter applied to image on file glassCompletableFutures.jpg");
                 break;
             default:
                 System.out.println("\nInvalid filter");

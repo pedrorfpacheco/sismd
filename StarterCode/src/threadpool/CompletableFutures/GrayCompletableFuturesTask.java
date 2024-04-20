@@ -19,13 +19,17 @@ public class GrayCompletableFuturesTask implements Callable<CompletableFuture<Co
     public CompletableFuture<Color[][]> call() {
         return CompletableFuture.supplyAsync(() -> {
             Color[][] grayImage = new Color[endRow - startRow][image[0].length];
+
             for (int i = startRow; i < endRow; i++) {
                 for (int j = 0; j < image[0].length; j++) {
                     Color color = image[i][j];
+
                     int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+
                     grayImage[i - startRow][j] = new Color(gray, gray, gray);
                 }
             }
+
             return grayImage;
         });
     }

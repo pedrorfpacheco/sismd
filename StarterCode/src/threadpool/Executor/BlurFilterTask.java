@@ -1,4 +1,4 @@
-package threadpool;
+package threadpool.Executor;
 
 import java.awt.*;
 

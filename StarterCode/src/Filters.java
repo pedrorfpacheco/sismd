@@ -1,7 +1,7 @@
-import threadpool.BlurFilterTask;
-import threadpool.ConditionalBlurTask;
-import threadpool.GlassFilterTask;
-import threadpool.GrayFilterTask;
+import threadpool.Executor.BlurFilterTask;
+import threadpool.Executor.ConditionalBlurTask;
+import threadpool.Executor.GlassFilterTask;
+import threadpool.Executor.GrayFilterTask;
 import threads.BlurFilterThread;
 import threads.ConditionalBlurThread;
 import threads.GlassFilterThread;

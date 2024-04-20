@@ -2,6 +2,7 @@ import threadpool.Executor.BlurFilterTask;
 import threadpool.Executor.ConditionalBlurTask;
 import threadpool.Executor.GlassFilterTask;
 import threadpool.Executor.GrayFilterTask;
+import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
 import threads.BlurFilterThread;
 import threads.ConditionalBlurThread;
 import threads.GlassFilterThread;
@@ -11,10 +12,7 @@ import utils.Utils;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static utils.Utils.*;
 
@@ -371,6 +369,18 @@ public class Filters {
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // Wait for all tasks to finish
 
         Utils.writeImage(blurredImage, outputFile);
+    }
+
+    public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
+        Color[][] grayImage = new Color[image.length][image[0].length];
+
+        ForkJoinPool pool = new ForkJoinPool(numThreads);
+
+        GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, image.length);
+
+        pool.invoke(task);
+
+        Utils.writeImage(grayImage, outputFile);
     }
 }
 

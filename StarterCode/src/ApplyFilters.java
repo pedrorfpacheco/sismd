@@ -159,6 +159,17 @@ public class ApplyFilters {
 
                 System.out.println("\nConditional blur filter applied to image on file conditionalBlurThreadPool.jpg");
                 break;
+
+            case "20":
+                long startTime20 = System.currentTimeMillis();
+
+                filters.GrayFilterForkJoinPool("grayscaleForkJoinPool.jpg", numThreads);
+
+                long endTime20 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime20 - startTime20) + " milliseconds");
+
+                System.out.println("\nGrayscale filter applied to image on file grayscaleForkJoinPool.jpg");
+                break;
             default:
                 System.out.println("\nInvalid filter");
                 break;

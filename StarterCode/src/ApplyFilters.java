@@ -27,125 +27,135 @@ public class ApplyFilters {
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException {
         Filters filters = new Filters(filePath);
         final int numThreads = 8;
-        final int matrixSizeForBlur=3;
+        final int matrixSizeForBlur = 3;
 
         switch (filter) {
             case "1":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.BrighterFilter("brighter.jpg", 128);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime1 = System.currentTimeMillis();
+
+                filters.BrighterFilter("brighter.jpg", 128);
+
+                long endTime1 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime1 - startTime1) + " milliseconds");
 
                 break;
             case "2":
-                measureExecutionTime(() -> {
-                    filters.GrayScaleFilter("grayscale.jpg");
-                });
+                long startTime2 = System.currentTimeMillis();
+
+                filters.GrayScaleFilter("grayscale.jpg");
+
+                long endTime2 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime2 - startTime2) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscale.jpg");
                 break;
             case "4":
-                measureExecutionTime(() -> {
-                    filters.GlassFilter("glass.jpg");
-                });
+                long startTime4 = System.currentTimeMillis();
+
+                filters.GlassFilter("glass.jpg");
+
+                long endTime4 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime4 - startTime4) + " milliseconds");
+
+                System.out.println("Glass filter applied to image on file glass.jpg");
                 break;
             case "5":
-                measureExecutionTime(() -> {
-                    filters.BlurFilter("blur.jpg",matrixSizeForBlur);
-                });
+                long startTime5 = System.currentTimeMillis();
+
+                filters.BlurFilter("blur.jpg", matrixSizeForBlur);
+
+                long endTime5 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime5 - startTime5) + " milliseconds");
+
                 System.out.println("Blur filter applied to image on file blur.jpg");
                 break;
             case "6":
-                measureExecutionTime(() -> {
-                    filters.ConditionalBlurFilter("conditionalBlur.jpg", matrixSizeForBlur);
-                });
+                long startTime6 = System.currentTimeMillis();
+
+                filters.ConditionalBlurFilter("conditionalBlur.jpg", matrixSizeForBlur);
+
+                long endTime6 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime6 - startTime6) + " milliseconds");
+
                 System.out.println("Conditional blur filter applied to image on file conditionalBlur.jpg");
                 break;
             case "8":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.GrayFilterMultiThread("grayscaleMultiThread.jpg", numThreads);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime8 = System.currentTimeMillis();
+
+                filters.GrayFilterMultiThread("grayscaleMultiThread.jpg", numThreads);
+
+                long endTime8 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime8 - startTime8) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleMultiThread.jpg");
                 break;
             case "10":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.GlassFilterMultiThread("glassMultiThread.jpg", numThreads);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime10 = System.currentTimeMillis();
+
+                filters.GlassFilterMultiThread("glassMultiThread.jpg", numThreads);
+
+                long endTime10 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime10 - startTime10) + " milliseconds");
 
                 System.out.println("Glass filter applied to image on file glassMultiThread.jpg");
                 break;
             case "11":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.BlurFilterMultiThread("blurMultithread.jpg",matrixSizeForBlur, numThreads);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime11 = System.currentTimeMillis();
+
+                filters.BlurFilterMultiThread("blurMultithread.jpg", matrixSizeForBlur, numThreads);
+
+                long endTime11 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime11 - startTime11) + " milliseconds");
 
                 System.out.println("Blur filter applied to image on file blurMultithread.jpg");
                 break;
             case "12":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.ConditionalBlurFilterMultiThread("conditionalBlurMultiThread.jpg", numThreads, matrixSizeForBlur);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime12 = System.currentTimeMillis();
+
+                filters.ConditionalBlurFilterMultiThread("conditionalBlurMultiThread.jpg", numThreads, matrixSizeForBlur);
+
+                long endTime12 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime12 - startTime12) + " milliseconds");
 
                 System.out.println("Conditional blur filter applied to image on file conditionalBlurMultiThread.jpg");
                 break;
             case "14":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.GrayFilterThreadPool("grayscaleThreadPool.jpg", numThreads);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime14 = System.currentTimeMillis();
+
+                filters.GrayFilterThreadPool("grayscaleThreadPool.jpg", numThreads);
+
+                long endTime14 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime14 - startTime14) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleThreadPool.jpg");
                 break;
             case "16":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.GlassFilterThreadPool("glassThreadPool.jpg", numThreads);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime16 = System.currentTimeMillis();
+
+                filters.GlassFilterThreadPool("glassThreadPool.jpg", numThreads);
+
+                long endTime16 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime16 - startTime16) + " milliseconds");
+
+                System.out.println("\nGlass filter applied to image on file glassThreadPool.jpg");
                 break;
             case "17":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.BlurFilterThreadPool("blurThreadPool.jpg",matrixSizeForBlur,numThreads);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime17 = System.currentTimeMillis();
+
+                filters.BlurFilterThreadPool("blurThreadPool.jpg", matrixSizeForBlur, numThreads);
+
+                long endTime17 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime17 - startTime17) + " milliseconds");
+
                 System.out.println("\nBlur filter applied to image on file blurThreadPool.jpg");
                 break;
             case "18":
-                measureExecutionTime(() -> {
-                    try {
-                        filters.ConditionalBlurFilterThreadPool("conditionalBlurThreadPool.jpg", numThreads, matrixSizeForBlur);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                long startTime18 = System.currentTimeMillis();
+
+                filters.ConditionalBlurFilterThreadPool("conditionalBlurThreadPool.jpg", numThreads, matrixSizeForBlur);
+
+                long endTime18 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime18 - startTime18) + " milliseconds");
 
                 System.out.println("\nConditional blur filter applied to image on file conditionalBlurThreadPool.jpg");
                 break;
@@ -153,12 +163,5 @@ public class ApplyFilters {
                 System.out.println("\nInvalid filter");
                 break;
         }
-    }
-
-    public static void measureExecutionTime(Runnable runnable) {
-        long startTime = System.currentTimeMillis();
-        runnable.run();
-        long endTime = System.currentTimeMillis();
-        System.out.println("\nExecution time: " + (endTime - startTime) + " milliseconds");
     }
 }

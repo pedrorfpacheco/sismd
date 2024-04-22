@@ -4,6 +4,7 @@ import threadpool.Executor.BlurFilterTask;
 import threadpool.Executor.ConditionalBlurTask;
 import threadpool.Executor.GlassFilterTask;
 import threadpool.Executor.GrayFilterTask;
+import threadpool.ForkJoinPool.BlurFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
 import threads.BlurFilterThread;
@@ -376,11 +377,11 @@ public class Filters {
         Utils.writeImage(blurredImage, outputFile);
     }
 
-    public void BlurFilterForkJoinPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+    public void BlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) throws InterruptedException{
         Color[][] blurredImage = new Color[image.length][image[0].length];
         ForkJoinPool pool = new ForkJoinPool(numThreads);
 
-        //GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, image.length);
+        BlurFilterForkJoinPoolTask task = new BlurFilterForkJoinPoolTask(image, blurredImage,0, image.length, matrixSize);
 
         pool.invoke(task);
 

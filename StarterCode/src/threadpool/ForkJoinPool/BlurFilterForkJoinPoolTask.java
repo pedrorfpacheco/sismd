@@ -1,14 +1,17 @@
-package threadpool.Executor;
+package threadpool.ForkJoinPool;
 
 import java.awt.*;
+import java.util.concurrent.RecursiveAction;
 
-public class BlurFilterTask implements Runnable{
+public class BlurFilterForkJoinPoolTask extends RecursiveAction {
+
+    private static final int THRESHOLD = 1000;
     private final Color[][] source;
     private final Color[][] destination;
     private final int startRow, endRow;
-    private final int matrixSize;
+    private final int matrixSize; // Size of the blur matrix
 
-    public BlurFilterTask(Color[][] source, Color[][] destination, int startRow, int endRow, int matrixSize) {
+    public BlurFilterForkJoinPoolTask(Color[][] source, Color[][] destination, int startRow, int endRow, int matrixSize) {
         this.source = source;
         this.destination = destination;
         this.startRow = startRow;
@@ -17,7 +20,22 @@ public class BlurFilterTask implements Runnable{
     }
 
     @Override
-    public void run() {
+    protected void compute() {
+        int length = endRow - startRow;
+        if (length < THRESHOLD) {
+            // Process sequentially
+            applyBlur(source, destination, startRow, endRow, matrixSize);
+        } else {
+            // Split task and process in parallel
+            int mid = startRow + length / 2;
+            invokeAll(
+                    new BlurFilterForkJoinPoolTask(source, destination, startRow, mid, matrixSize),
+                    new BlurFilterForkJoinPoolTask(source, destination, mid, endRow, matrixSize)
+            );
+        }
+    }
+
+    public static void applyBlur(Color[][] source, Color[][] destination, int startRow, int endRow, int matrixSize) {
         int height = source.length;
         int width = source[0].length;
         int offset = matrixSize / 2;
@@ -50,4 +68,5 @@ public class BlurFilterTask implements Runnable{
             }
         }
     }
+
 }

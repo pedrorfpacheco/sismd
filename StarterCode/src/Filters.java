@@ -367,7 +367,7 @@ public class Filters {
             int startRow = i * chunkHeight;
             int endRow = Math.min(startRow + chunkHeight, height);
 
-            executor.execute(new BlurFilterTask(image, blurredImage, startRow, endRow, matrixSize));
+            executor.submit(new BlurFilterTask(image, blurredImage, startRow, endRow, matrixSize));
         }
 
         executor.shutdown(); // No new tasks will be accepted
@@ -375,6 +375,41 @@ public class Filters {
 
         Utils.writeImage(blurredImage, outputFile);
     }
+
+    public void BlurFilterForkJoinPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+        Color[][] blurredImage = new Color[image.length][image[0].length];
+        ForkJoinPool pool = new ForkJoinPool(numThreads);
+
+        //GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, image.length);
+
+        pool.invoke(task);
+
+        Utils.writeImage(blurredImage, outputFile);
+    }
+
+    public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        int height = image.length;
+        int chunkHeight = (height + numThreads - 1) / numThreads;
+        List<Future<CompletableFuture<Color[][]>>> futures = new ArrayList<>();
+
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * chunkHeight;
+            int endRow = Math.min(startRow + chunkHeight, height);
+            futures.add(executor.submit(new GrayCompletableFuturesTask(image, startRow, endRow)));
+        }
+
+        Color[][] grayImage = new Color[image.length][image[0].length];
+        for (Future<CompletableFuture<Color[][]>> future : futures) {
+            CompletableFuture<Color[][]> completableFuture = future.get();
+            Color[][] partialGrayImage = completableFuture.get();
+            System.arraycopy(partialGrayImage, 0, grayImage, partialGrayImage.length * futures.indexOf(future), partialGrayImage.length);
+        }
+
+        executor.shutdown();
+        Utils.writeImage(grayImage, outputFile);
+    }
+
 
     public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
         Color[][] grayImage = new Color[image.length][image[0].length];

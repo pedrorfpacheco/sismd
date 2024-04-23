@@ -362,9 +362,11 @@ public class Filters {
         Color[][] blurredImage = new Color[image.length][image[0].length];
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
-        int chunkHeight = (height + numThreads - 1) / numThreads;
+        int width = image[0].length;
+        int numTasks = ((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
+        int chunkHeight = (height + numTasks - 1) / numTasks;
 
-        for (int i = 0; i < numThreads; i++) {
+        for (int i = 0; i < numTasks; i++) {
             int startRow = i * chunkHeight;
             int endRow = Math.min(startRow + chunkHeight, height);
 
@@ -388,10 +390,11 @@ public class Filters {
         Utils.writeImage(blurredImage, outputFile);
     }
 
-    public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+    /*public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
-        int chunkHeight = (height + numThreads - 1) / numThreads;
+        int numTasks = ((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
+        int chunkHeight = (height + numTasks - 1) / numTasks;
         List<Future<CompletableFuture<Color[][]>>> futures = new ArrayList<>();
 
         for (int i = 0; i < numThreads; i++) {
@@ -410,7 +413,7 @@ public class Filters {
         executor.shutdown();
         Utils.writeImage(grayImage, outputFile);
     }
-
+*/
 
     public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
         Color[][] grayImage = new Color[image.length][image[0].length];

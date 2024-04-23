@@ -12,7 +12,7 @@ public class ApplyFilters {
 
         System.out.println("\nChoose a filter to apply to the image:");
         System.out.format("|     Sequential      |     MultiThread      |                             Threadpool                             | %n");
-        System.out.format("|---------------------|----------------------|       Executor       |     ForkJoinPool     |  CompletableFilters  |%n");
+        System.out.format("|---------------------|----------------------|       Executor       |     ForkJoinPool     |  CompletableFutures  |%n");
         System.out.format("| 1. Brighter         | 7. Brighter          | 13. Brighter         | 19. Brighter         | 25. Brighter         |%n");
         System.out.format("| 2. GrayScale        | 8. GrayScale         | 14. GrayScale        | 20. GrayScale        | 26. GrayScale        |%n");
         System.out.format("| 3. Swirl            | 9. Swirl             | 15. Swirl            | 21. Swirl            | 27. Swirl            |%n");
@@ -28,7 +28,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException, ExecutionException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 8;
+        final int numThreads = 12;
         final int matrixSizeForBlur = 3;
 
         switch (filter) {
@@ -214,7 +214,7 @@ public class ApplyFilters {
             case "29":
                 long startTime29 = System.currentTimeMillis();
 
-                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+               // filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
 
                 long endTime29 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime29 - startTime29) + " milliseconds");

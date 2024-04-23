@@ -286,3 +286,5 @@
    1. Executor
    2. Fork Join Pool
    3. Completable Futures
+
+### Garbage Collector

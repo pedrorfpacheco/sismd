@@ -214,7 +214,7 @@ public class ApplyFilters {
             case "29":
                 long startTime29 = System.currentTimeMillis();
 
-               // filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
 
                 long endTime29 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime29 - startTime29) + " milliseconds");

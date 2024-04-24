@@ -1,3 +1,4 @@
+import threadpool.CompletableFutures.BlurCompletableFutureTask;
 import threadpool.CompletableFutures.GrayCompletableFuturesTask;
 import threadpool.CompletableFutures.GlassCompletableFuturesTask;
 import threadpool.Executor.BlurFilterTask;
@@ -390,30 +391,32 @@ public class Filters {
         Utils.writeImage(blurredImage, outputFile);
     }
 
-    /*public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+    public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException, ExecutionException {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
-        int numTasks = ((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
+        int width = image.length;
+        int numTasks = numThreads;//((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
         int chunkHeight = (height + numTasks - 1) / numTasks;
         List<Future<CompletableFuture<Color[][]>>> futures = new ArrayList<>();
 
         for (int i = 0; i < numThreads; i++) {
             int startRow = i * chunkHeight;
             int endRow = Math.min(startRow + chunkHeight, height);
-            futures.add(executor.submit(new GrayCompletableFuturesTask(image, startRow, endRow)));
+            futures.add(executor.submit(new BlurCompletableFutureTask(image,matrixSize, startRow, endRow)));
         }
 
-        Color[][] grayImage = new Color[image.length][image[0].length];
+        Color[][] blurredImage = new Color[image.length][image[0].length];
         for (Future<CompletableFuture<Color[][]>> future : futures) {
             CompletableFuture<Color[][]> completableFuture = future.get();
-            Color[][] partialGrayImage = completableFuture.get();
-            System.arraycopy(partialGrayImage, 0, grayImage, partialGrayImage.length * futures.indexOf(future), partialGrayImage.length);
+            Color[][] partialBlurImage = completableFuture.get();
+            System.out.println(partialBlurImage.length + "  " + partialBlurImage[0].length);
+            System.arraycopy(partialBlurImage, 0, blurredImage, partialBlurImage.length * futures.indexOf(future), partialBlurImage.length);
         }
 
         executor.shutdown();
-        Utils.writeImage(grayImage, outputFile);
+        Utils.writeImage(blurredImage, outputFile);
     }
-*/
+
 
     public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
         Color[][] grayImage = new Color[image.length][image[0].length];

@@ -191,6 +191,16 @@ public class ApplyFilters {
 
                 System.out.println("\nBlur filter applied to image on file blurForkJoinPool.jpg");
                 break;
+            case "24":
+                long startTime24 = System.currentTimeMillis();
+
+                filters.ConditionalBlurFilterForkJoinPool("conditionalBlurForkJoinPool.jpg", numThreads, matrixSizeForBlur);
+
+                long endTime24 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime24 - startTime24) + " milliseconds");
+
+                System.out.println("\nConditional Blur filter applied to image on file conditionalBlurForkJoinPool.jpg");
+                break;
             case "26":
                 long startTime26 = System.currentTimeMillis();
 

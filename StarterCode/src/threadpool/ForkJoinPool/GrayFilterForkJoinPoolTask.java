@@ -4,37 +4,42 @@ import java.awt.*;
 import java.util.concurrent.RecursiveAction;
 
 public class GrayFilterForkJoinPoolTask extends RecursiveAction {
-    private static final int THRESHOLD = 1000;
+    private static final int THRESHOLD = 50000;
 
     private Color[][] image;
     private Color[][] destination;
-    private int startRow;
-    private int endRow;
+    private final int startX, startY, endX, endY;
 
-    public GrayFilterForkJoinPoolTask(Color[][] image, Color[][] destination, int startRow, int endRow) {
+    public GrayFilterForkJoinPoolTask(Color[][] image, Color[][] destination, int startX, int startY, int endX, int endY) {
         this.image = image;
         this.destination = destination;
-        this.startRow = startRow;
-        this.endRow = endRow;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
     }
 
     @Override
     protected void compute() {
-        if (endRow - startRow <= THRESHOLD) {
+        int size = (endX - startX) * (endY - startY);
+        if (size < THRESHOLD) {
             applyFilter();
         } else {
-            int midRow = (startRow + endRow) / 2;
+            int midX = startX + (endX - startX) / 2;
+            int midY = startY + (endY - startY) / 2;
 
-            GrayFilterForkJoinPoolTask task1 = new GrayFilterForkJoinPoolTask(image, destination, startRow, midRow);
-            GrayFilterForkJoinPoolTask task2 = new GrayFilterForkJoinPoolTask(image, destination, midRow, endRow);
-
-            invokeAll(task1, task2);
+            invokeAll(
+                    new GrayFilterForkJoinPoolTask(image, destination, startX, startY, midX, midY), // Top left quadrant
+                    new GrayFilterForkJoinPoolTask(image, destination, midX, startY, endX, midY), // Top right quadrant
+                    new GrayFilterForkJoinPoolTask(image, destination, startX, midY, midX, endY), // Bottom left quadrant
+                    new GrayFilterForkJoinPoolTask(image, destination, midX, midY, endX, endY) // Bottom right quadrant
+            );
         }
     }
 
     private void applyFilter() {
-        for (int i = startRow; i < endRow; i++) {
-            for (int j = 0; j < image[0].length; j++) {
+        for (int i = startX; i < endX; i++) {
+            for (int j = startY; j < endY; j++) {
                 Color color = image[i][j];
 
                 int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;

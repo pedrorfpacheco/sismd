@@ -437,7 +437,7 @@ public class Filters {
 
         ForkJoinPool pool = new ForkJoinPool(numThreads);
 
-        GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, image.length);
+        GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, 0, image.length, image[0].length);
 
         pool.invoke(task);
 
@@ -447,7 +447,7 @@ public class Filters {
     public void GlassFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
         Color[][] glassImage = new Color[image.length][image[0].length];
         ForkJoinPool pool = new ForkJoinPool(numThreads);
-        GlassFilterForkJoinPoolTask task = new GlassFilterForkJoinPoolTask(image, glassImage, 0, image.length);
+        GlassFilterForkJoinPoolTask task = new GlassFilterForkJoinPoolTask(image, glassImage, 0, 0, image.length, image[0].length);
 
         pool.invoke(task);
 

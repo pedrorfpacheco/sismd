@@ -213,6 +213,17 @@ public class ApplyFilters {
 
                 System.out.println("\nConditional blur filter applied to image on file conditionalBlurThreadPool.jpg");
                 break;
+            case "19":
+                long startTime19 = System.currentTimeMillis();
+
+                threads = Runtime.getRuntime().availableProcessors();
+                filters.BrighterFilterForkJoinPool("brighterForkJoinPool.jpg", threads, 128);
+
+                long endTime19 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime19 - startTime19) + " milliseconds");
+
+                System.out.println("\nBrighter filter applied to image on file brighterForkJoinPool.jpg");
+                break;
             case "20":
                 long startTime20 = System.currentTimeMillis();
 
@@ -263,6 +274,16 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime24 - startTime24) + " milliseconds");
 
                 System.out.println("\nConditional Blur filter applied to image on file conditionalBlurForkJoinPool.jpg");
+                break;
+            case "25":
+                long startTime25 = System.currentTimeMillis();
+
+                filters.BrighterFilterCompletableFuture("brighterCompletableFutures.jpg", numThreads, 128);
+
+                long endTime25 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime25 - startTime25) + " milliseconds");
+
+                System.out.println("\nBrighter filter applied to image on file brighterCompletableFutures.jpg");
                 break;
             case "26":
                 long startTime26 = System.currentTimeMillis();

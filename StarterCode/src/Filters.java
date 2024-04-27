@@ -1,6 +1,7 @@
 import threadpool.CompletableFutures.*;
 import threadpool.Executor.*;
 import threadpool.ForkJoinPool.BlurFilterForkJoinPoolTask;
+import threadpool.ForkJoinPool.BrightnessFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.ConditionalBlurForkJoinPoolTask;
 import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
@@ -44,7 +45,7 @@ public class Filters {
     // ##### IMPERATIVE #####
     // Brighter filter works by adding value to each of the red, green and blue of each pixel
     // up to the maximum of 255
-    public void BrighterFilter(String outputFile, int value) throws IOException {
+    public void BrighterFilter(String outputFile, int value) {
         Color[][] tmp = copyImage(image);
 
         // Runs through entire matrix
@@ -611,6 +612,21 @@ public class Filters {
         Utils.writeImage(filteredImage, outputFile);
     }
 
+    public void BrighterFilterForkJoinPool(String outputFile, int numThreads, int brightnessValue) {
+        int height = image.length;
+        int width = image[0].length;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        ForkJoinPool forkJoinPool = new ForkJoinPool(numThreads);
+
+        forkJoinPool.invoke(new BrightnessFilterForkJoinPoolTask(image, filteredImage, 0, height, brightnessValue));
+
+        forkJoinPool.shutdown();
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
     // ##### Completable Future #####
     public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException, ExecutionException {
         int width = image.length;
@@ -734,6 +750,50 @@ public class Filters {
         try {
             allOfFuture.get();
         } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
+        }
+
+        executor.shutdown();
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
+    public void BrighterFilterCompletableFuture(String outputFile, int numThreads, int brightnessValue) {
+        int height = image.length;
+        int width = image[0].length;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        CompletableFuture<Void>[] futures = new CompletableFuture[height];
+
+        for (int y = 0; y < height; y++) {
+            int currentY = y;
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                for (int x = 0; x < width; x++) {
+                    Color pixel = image[currentY][x];
+                    int r = pixel.getRed();
+                    int g = pixel.getGreen();
+                    int b = pixel.getBlue();
+
+                    // Adiciona o valor de brilho a cada canal de cor
+                    r = Math.min(255, Math.max(0, r + brightnessValue));
+                    g = Math.min(255, Math.max(0, g + brightnessValue));
+                    b = Math.min(255, Math.max(0, b + brightnessValue));
+
+                    filteredImage[currentY][x] = new Color(r, g, b);
+                }
+            }, executor);
+
+            futures[y] = future;
+        }
+
+        CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(futures);
+
+        try {
+            allOfFuture.get();
+        } catch (Exception e) {
             System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
         }
 

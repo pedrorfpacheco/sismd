@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.concurrent.RecursiveAction;
 
 public class SwirlFilterForkJoinPoolTask extends RecursiveAction {
-    private static final long serialVersionUID = 1L;
 
     private final Color[][] image;
     private final Color[][] filteredImage;

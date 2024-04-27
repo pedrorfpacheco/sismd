@@ -28,7 +28,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException, ExecutionException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 12;
+        final int numThreads = 7;
         final int matrixSizeForBlur = 3;
 
         switch (filter) {
@@ -151,6 +151,16 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime12 - startTime12) + " milliseconds");
 
                 System.out.println("Conditional blur filter applied to image on file conditionalBlurMultiThread.jpg");
+                break;
+            case "13":
+                long startTime13 = System.currentTimeMillis();
+
+                filters.BrigtherFilterThreadPool("brighterThreadPool.jpg", 128, numThreads);
+
+                long endTime13 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime13 - startTime13) + " milliseconds");
+
+                System.out.println("Brighter filter applied to image on file brighterMultiThread.jpg");
                 break;
             case "14":
                 long startTime14 = System.currentTimeMillis();

@@ -373,6 +373,30 @@ public class Filters {
 
     // ##### Thread pool #####
 
+    public void BrigtherFilterThreadPool(String outputFile,int value, int numThreads) throws InterruptedException{
+        //Color[][] blurredImage = new Color[image.length][image[0].length];
+        int width = image.length;
+        int height = image[0].length;
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        int rowsPerTask = height / numThreads;
+        int remainingRows = height % numThreads;
+
+        int startRow = 0;
+        for (int i = 0; i < numThreads; i++) {
+            int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
+            int endRow = startRow + rowsForThisTask;
+            executor.submit(new BrighterFilterTask(image, startRow, endRow, value));
+            startRow = endRow;
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+        Utils.writeImage(image, outputFile);
+    }
+
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
         int width = image.length;
         int height = image[0].length;
@@ -468,8 +492,8 @@ public class Filters {
             executor.submit(new BlurFilterTask(image, blurredImage, startRow, endRow, matrixSize));
         }
 
-        executor.shutdown(); // No new tasks will be accepted
-        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // Wait for all tasks to finish
+        executor.shutdown();
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         Utils.writeImage(blurredImage, outputFile);
     }

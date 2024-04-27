@@ -5,9 +5,15 @@ import threadpool.ForkJoinPool.ConditionalBlurForkJoinPoolTask;
 import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
 import threads.*;
+import threadpool.ForkJoinPool.SwirlFilterForkJoinPoolTask;
+import threads.BlurFilterThread;
+import threads.ConditionalBlurThread;
+import threads.GlassFilterThread;
+import threads.GrayFilterThread;
 import utils.Utils;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +41,7 @@ public class Filters {
         image = Utils.loadImage(filename);
     }
 
-
+    // ##### IMPERATIVE #####
     // Brighter filter works by adding value to each of the red, green and blue of each pixel
     // up to the maximum of 255
     public void BrighterFilter(String outputFile, int value) throws IOException {
@@ -72,6 +78,48 @@ public class Filters {
             }
         }
         Utils.writeImage(tmp, outputFile);
+    }
+
+    public void BlurFilter(String outputFile,int matrixSize) {
+        Color[][] blurredImage = new Color[image.length][image[0].length];
+        int height = image.length;
+        int width = image[0].length;
+        int offset = matrixSize / 2;
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int redSum = 0, greenSum = 0, blueSum = 0;
+                int count = 0;
+
+                // Iterate over the m x m submatrix centered at (i, j)
+                for (int ki = -offset; ki <= offset; ki++) {
+                    for (int kj = -offset; kj <= offset; kj++) {
+                        int ni = i + ki; // New i index
+                        int nj = j + kj; // New j index
+
+                        // Check if the new indices are within the image bounds
+                        if (ni >= 0 && ni < height && nj >= 0 && nj < width) {
+                            Color neighborColor = image[ni][nj];
+                            redSum += neighborColor.getRed();
+                            greenSum += neighborColor.getGreen();
+                            blueSum += neighborColor.getBlue();
+                            count++;
+                        }
+                    }
+                }
+
+                // Calculate average values
+                int avgRed = redSum / count;
+                int avgGreen = greenSum / count;
+                int avgBlue = blueSum / count;
+
+                // Apply the new color to the blurred image
+                blurredImage[i][j] = new Color(avgRed, avgGreen, avgBlue);
+            }
+        }
+
+        Utils.writeImage(blurredImage, outputFile);
+
     }
 
     public void GrayScaleFilter(String outputFile) {
@@ -146,6 +194,57 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
+    public void SwirlFilter(String outputFile) {
+        int height = image.length;
+        int width = image[0].length;
+        int x0 = width / 2;
+        int y0 = height / 2;
+        double maxAngle = Math.PI / 256;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2));
+                double angle = maxAngle * d;
+
+                int xNew = (int) ((x - x0) * Math.cos(angle) - (y - y0) * Math.sin(angle) + x0);
+                int yNew = (int) ((x - x0) * Math.sin(angle) + (y - y0) * Math.cos(angle) + y0);
+
+                // Garantir que as novas coordenadas estejam dentro dos limites da imagem
+                xNew = Math.max(0, Math.min(width - 1, xNew));
+                yNew = Math.max(0, Math.min(height - 1, yNew));
+
+                filteredImage[y][x] = image[yNew][xNew];
+            }
+        }
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
+    // ##### MultiThread #####
+
+    public void BlurFilterMultiThread(String outputFile,int matrixSize, int threadCount) throws InterruptedException{
+        Color[][] blurredImage = new Color[image.length][image[0].length];
+        Thread[] threads = new Thread[threadCount];
+        int height = image.length;
+        int chunkHeight = (height + threadCount - 1) / threadCount; // Divide equally among threads, rounding up
+
+        for (int i = 0; i < threadCount; i++) {
+            int startRow = i * chunkHeight;
+            int endRow = Math.min(startRow + chunkHeight, height);
+
+            threads[i] = new BlurFilterThread(image, blurredImage, startRow, endRow, matrixSize);
+            threads[i].start();
+        }
+
+        for (Thread t : threads) {
+            t.join(); // Wait for all threads to finish
+        }
+
+        Utils.writeImage(blurredImage, outputFile);
+    }
+
     public void GrayFilterMultiThread(String outputfile, int numThreads) throws InterruptedException {
         int width = image.length;
         int height = image[0].length;
@@ -206,6 +305,76 @@ public class Filters {
         latch.await();
         Utils.writeImage(tmp, outputFile);
     }
+
+    public void SwirlFilterMultiThread(String outputFile, int numThreads) throws InterruptedException{
+        int height = image.length;
+        int width = image[0].length;
+        int x0 = width / 2;
+        int y0 = height / 2;
+        double maxAngle = Math.PI / 256;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        Thread[] threads = new Thread[numThreads];
+
+        int chunkHeight = height / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            final int threadIndex = i;
+            threads[i] = new Thread(() -> {
+                int startY = threadIndex * chunkHeight;
+                int endY = (threadIndex == numThreads - 1) ? height : startY + chunkHeight;
+
+                for (int y = startY; y < endY; y++) {
+                    for (int x = 0; x < width; x++) {
+                        double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2));
+                        double angle = maxAngle * d;
+
+                        int xNew = (int) ((x - x0) * Math.cos(angle) - (y - y0) * Math.sin(angle) + x0);
+                        int yNew = (int) ((x - x0) * Math.sin(angle) + (y - y0) * Math.cos(angle) + y0);
+
+                        xNew = Math.max(0, Math.min(width - 1, xNew));
+                        yNew = Math.max(0, Math.min(height - 1, yNew));
+
+                        filteredImage[y][x] = image[yNew][xNew];
+                    }
+                }
+            });
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
+    public void BrighterFilterMultiThread(String outputFile, int value, int numThreads) throws IOException, InterruptedException {
+        Color[][] brighter = new Color[image.length][image[0].length];
+        Thread[] threads = new Thread[numThreads];
+        int rowsPerThread = brighter.length / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * rowsPerThread;
+            int endRow = (i == numThreads - 1) ? brighter.length : (startRow + rowsPerThread);
+            threads[i] = new Thread(new BrighterFilterThread(image,brighter, startRow, endRow, value));
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
+            thread.join();  // Wait for all threads to finish
+        }
+
+        Utils.writeImage(brighter, outputFile);  // Assuming Utils.writeImage handles writing the image file
+    }
+
+
+    // ##### Thread pool #####
 
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {
         int width = image.length;
@@ -287,71 +456,6 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-
-    public void BlurFilterMultiThread(String outputFile,int matrixSize, int threadCount) throws InterruptedException{
-        Color[][] blurredImage = new Color[image.length][image[0].length];
-        Thread[] threads = new Thread[threadCount];
-        int height = image.length;
-        int chunkHeight = (height + threadCount - 1) / threadCount; // Divide equally among threads, rounding up
-
-        for (int i = 0; i < threadCount; i++) {
-            int startRow = i * chunkHeight;
-            int endRow = Math.min(startRow + chunkHeight, height);
-
-            threads[i] = new BlurFilterThread(image, blurredImage, startRow, endRow, matrixSize);
-            threads[i].start();
-        }
-
-        for (Thread t : threads) {
-            t.join(); // Wait for all threads to finish
-        }
-
-        Utils.writeImage(blurredImage, outputFile);
-    }
-
-    public void BlurFilter(String outputFile,int matrixSize) {
-        Color[][] blurredImage = new Color[image.length][image[0].length];
-        int height = image.length;
-        int width = image[0].length;
-        int offset = matrixSize / 2;
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int redSum = 0, greenSum = 0, blueSum = 0;
-                int count = 0;
-
-                // Iterate over the m x m submatrix centered at (i, j)
-                for (int ki = -offset; ki <= offset; ki++) {
-                    for (int kj = -offset; kj <= offset; kj++) {
-                        int ni = i + ki; // New i index
-                        int nj = j + kj; // New j index
-
-                        // Check if the new indices are within the image bounds
-                        if (ni >= 0 && ni < height && nj >= 0 && nj < width) {
-                            Color neighborColor = image[ni][nj];
-                            redSum += neighborColor.getRed();
-                            greenSum += neighborColor.getGreen();
-                            blueSum += neighborColor.getBlue();
-                            count++;
-                        }
-                    }
-                }
-
-                // Calculate average values
-                int avgRed = redSum / count;
-                int avgGreen = greenSum / count;
-                int avgBlue = blueSum / count;
-
-                // Apply the new color to the blurred image
-                blurredImage[i][j] = new Color(avgRed, avgGreen, avgBlue);
-            }
-        }
-
-        Utils.writeImage(blurredImage, outputFile);
-
-    }
-
-
     public void BlurFilterThreadPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
         Color[][] blurredImage = new Color[image.length][image[0].length];
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
@@ -372,6 +476,55 @@ public class Filters {
 
         Utils.writeImage(blurredImage, outputFile);
     }
+
+    public void SwirlFilterThreadPool(String outputFile, int numThreads) {
+        int height = image.length;
+        int width = image[0].length;
+        int x0 = width / 2;
+        int y0 = height / 2;
+        double maxAngle = Math.PI / 256;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        int chunkHeight = height / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            final int threadIndex = i;
+            executor.execute(() -> {
+                int startY = threadIndex * chunkHeight;
+                int endY = (threadIndex == numThreads - 1) ? height : startY + chunkHeight;
+
+                for (int y = startY; y < endY; y++) {
+                    for (int x = 0; x < width; x++) {
+                        double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2));
+                        double angle = maxAngle * d;
+
+                        int xNew = (int) ((x - x0) * Math.cos(angle) - (y - y0) * Math.sin(angle) + x0);
+                        int yNew = (int) ((x - x0) * Math.sin(angle) + (y - y0) * Math.cos(angle) + y0);
+
+                        xNew = Math.max(0, Math.min(width - 1, xNew));
+                        yNew = Math.max(0, Math.min(height - 1, yNew));
+
+                        filteredImage[y][x] = image[yNew][xNew];
+                    }
+                }
+            });
+        }
+
+        executor.shutdown();
+
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            System.out.println("Erro ao aguardar a conclusão das threads: " + e.getMessage());
+        }
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
+    // ##### Fork join #####
 
     public void BlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) throws InterruptedException{
         Color[][] blurredImage = new Color[image.length][image[0].length];
@@ -397,6 +550,45 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
+    public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
+        Color[][] grayImage = new Color[image.length][image[0].length];
+
+        ForkJoinPool pool = new ForkJoinPool(numThreads);
+
+        GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, 0, image.length, image[0].length);
+
+        pool.invoke(task);
+
+        Utils.writeImage(grayImage, outputFile);
+    }
+
+    public void GlassFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
+        Color[][] glassImage = new Color[image.length][image[0].length];
+        ForkJoinPool pool = new ForkJoinPool(numThreads);
+        GlassFilterForkJoinPoolTask task = new GlassFilterForkJoinPoolTask(image, glassImage, 0, 0, image.length, image[0].length);
+
+        pool.invoke(task);
+
+        Utils.writeImage(glassImage, outputFile);
+    }
+
+    public void SwirlFilterForkJoinPool(String outputFile, int numThreads) {
+        int height = image.length;
+        int width = image[0].length;
+        int x0 = width / 2;
+        int y0 = height / 2;
+        double maxAngle = Math.PI / 256;
+
+        Color[][] filteredImage = new Color[height][width];
+
+        ForkJoinPool forkJoinPool = new ForkJoinPool(numThreads);
+
+        forkJoinPool.invoke(new SwirlFilterForkJoinPoolTask(image, filteredImage, 0, height, x0, y0, maxAngle));
+
+        Utils.writeImage(filteredImage, outputFile);
+    }
+
+    // ##### Completable Future #####
     public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException, ExecutionException {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
@@ -421,29 +613,6 @@ public class Filters {
 
         executor.shutdown();
         Utils.writeImage(blurredImage, outputFile);
-    }
-
-
-    public void GrayFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
-        Color[][] grayImage = new Color[image.length][image[0].length];
-
-        ForkJoinPool pool = new ForkJoinPool(numThreads);
-
-        GrayFilterForkJoinPoolTask task = new GrayFilterForkJoinPoolTask(image, grayImage, 0, 0, image.length, image[0].length);
-
-        pool.invoke(task);
-
-        Utils.writeImage(grayImage, outputFile);
-    }
-
-    public void GlassFilterForkJoinPool(String outputFile, int numThreads) throws InterruptedException {
-        Color[][] glassImage = new Color[image.length][image[0].length];
-        ForkJoinPool pool = new ForkJoinPool(numThreads);
-        GlassFilterForkJoinPoolTask task = new GlassFilterForkJoinPoolTask(image, glassImage, 0, 0, image.length, image[0].length);
-
-        pool.invoke(task);
-
-        Utils.writeImage(glassImage, outputFile);
     }
 
     public void GrayFilterCompletableFuture(String outputFile, int numThreads) throws InterruptedException, ExecutionException {
@@ -512,25 +681,53 @@ public class Filters {
 
     }
 
-    public void BrighterFilterMultiThread(String outputFile, int value, int numThreads) throws IOException, InterruptedException {
-        Color[][] brighter = new Color[image.length][image[0].length];
-        Thread[] threads = new Thread[numThreads];
-        int rowsPerThread = brighter.length / numThreads;
+    public void SwirlFilterCompletableFuture(String outputFile, int numThreads) {
+        int height = image.length;
+        int width = image[0].length;
+        int x0 = width / 2;
+        int y0 = height / 2;
+        double maxAngle = Math.PI / 256;
 
-        for (int i = 0; i < numThreads; i++) {
-            int startRow = i * rowsPerThread;
-            int endRow = (i == numThreads - 1) ? brighter.length : (startRow + rowsPerThread);
-            threads[i] = new Thread(new BrighterFilterThread(image,brighter, startRow, endRow, value));
-            threads[i].start();
+        Color[][] filteredImage = new Color[height][width];
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+
+        CompletableFuture<Void>[] futures = new CompletableFuture[height];
+
+        for (int y = 0; y < height; y++) {
+            int currentY = y;
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                for (int x = 0; x < width; x++) {
+                    double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(currentY - y0, 2));
+                    double angle = maxAngle * d;
+
+                    int xNew = (int) ((x - x0) * Math.cos(angle) - (currentY - y0) * Math.sin(angle) + x0);
+                    int yNew = (int) ((x - x0) * Math.sin(angle) + (currentY - y0) * Math.cos(angle) + y0);
+
+                    xNew = Math.max(0, Math.min(width - 1, xNew));
+                    yNew = Math.max(0, Math.min(height - 1, yNew));
+
+                    filteredImage[currentY][x] = image[yNew][xNew];
+                }
+            }, executor);
+
+            futures[y] = future;
         }
 
-        for (Thread thread : threads) {
-            thread.join();  // Wait for all threads to finish
+        CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(futures);
+
+        try {
+            allOfFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
         }
 
-        Utils.writeImage(brighter, outputFile);  // Assuming Utils.writeImage handles writing the image file
+        executor.shutdown();
+
+        Utils.writeImage(filteredImage, outputFile);
     }
 
-    
+
+
 
 }

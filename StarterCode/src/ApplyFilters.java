@@ -51,6 +51,16 @@ public class ApplyFilters {
 
                 System.out.println("\nGrayscale filter applied to image on file grayscale.jpg");
                 break;
+            case "3":
+                long startTime3 = System.currentTimeMillis();
+
+                filters.SwirlFilter("swirl.jpg");
+
+                long endTime3 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime3 - startTime3) + " milliseconds");
+
+                System.out.println("\nSwirl filter applied to image on file swirl.jpg");
+                break;
             case "4":
                 long startTime4 = System.currentTimeMillis();
 
@@ -101,6 +111,17 @@ public class ApplyFilters {
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleMultiThread.jpg");
                 break;
+            case "9":
+                long startTime9 = System.currentTimeMillis();
+                int threads = Runtime.getRuntime().availableProcessors();
+
+                filters.SwirlFilterMultiThread("swirlMultithreading.jpg", threads);
+
+                long endTime9 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime9 - startTime9) + " milliseconds");
+
+                System.out.println("\nSwirl filter applied to image on file swirlMultithreading.jpg");
+                break;
             case "10":
                 long startTime10 = System.currentTimeMillis();
 
@@ -140,6 +161,17 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime14 - startTime14) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleThreadPool.jpg");
+                break;
+            case "15":
+                long startTime15 = System.currentTimeMillis();
+
+                threads = Runtime.getRuntime().availableProcessors();
+                filters.SwirlFilterThreadPool("swirlThreadPool.jpg", threads);
+
+                long endTime15 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime15 - startTime15) + " milliseconds");
+
+                System.out.println("\nSwirl filter applied to image on file swirlThreadPool.jpg");
                 break;
             case "16":
                 long startTime16 = System.currentTimeMillis();
@@ -181,6 +213,17 @@ public class ApplyFilters {
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleForkJoinPool.jpg");
                 break;
+            case "21":
+                long startTime21 = System.currentTimeMillis();
+
+                threads = Runtime.getRuntime().availableProcessors();
+                filters.SwirlFilterForkJoinPool("swirlForkJoinPool.jpg", threads);
+
+                long endTime21 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime21 - startTime21) + " milliseconds");
+
+                System.out.println("\nSwirl filter applied to image on file swirlForkJoinPool.jpg");
+                break;
             case "22":
                 long startTime22 = System.currentTimeMillis();
 
@@ -220,6 +263,16 @@ public class ApplyFilters {
                 System.out.println("\nExecution time: " + (endTime26 - startTime26) + " milliseconds");
 
                 System.out.println("\nGrayscale filter applied to image on file grayscaleCompletableFutures.jpg");
+                break;
+            case "27":
+                long startTime27 = System.currentTimeMillis();
+
+                filters.SwirlFilterCompletableFuture("swirlCompletableFutures.jpg", numThreads);
+
+                long endTime27 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime27 - startTime27) + " milliseconds");
+
+                System.out.println("\nSwirl filter applied to image on file swirlCompletableFutures.jpg");
                 break;
             case "28":
                 long startTime28 = System.currentTimeMillis();

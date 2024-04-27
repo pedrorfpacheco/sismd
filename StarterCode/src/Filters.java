@@ -1,16 +1,10 @@
 import threadpool.CompletableFutures.*;
-import threadpool.Executor.BlurFilterTask;
-import threadpool.Executor.ConditionalBlurTask;
-import threadpool.Executor.GlassFilterTask;
-import threadpool.Executor.GrayFilterTask;
+import threadpool.Executor.*;
 import threadpool.ForkJoinPool.BlurFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.ConditionalBlurForkJoinPoolTask;
 import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
-import threads.BlurFilterThread;
-import threads.ConditionalBlurThread;
-import threads.GlassFilterThread;
-import threads.GrayFilterThread;
+import threads.*;
 import utils.Utils;
 
 import java.awt.*;
@@ -517,5 +511,26 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
 
     }
+
+    public void BrighterFilterMultiThread(String outputFile, int value, int numThreads) throws IOException, InterruptedException {
+        Color[][] brighter = new Color[image.length][image[0].length];
+        Thread[] threads = new Thread[numThreads];
+        int rowsPerThread = brighter.length / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            int startRow = i * rowsPerThread;
+            int endRow = (i == numThreads - 1) ? brighter.length : (startRow + rowsPerThread);
+            threads[i] = new Thread(new BrighterFilterThread(image,brighter, startRow, endRow, value));
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
+            thread.join();  // Wait for all threads to finish
+        }
+
+        Utils.writeImage(brighter, outputFile);  // Assuming Utils.writeImage handles writing the image file
+    }
+
+    
 
 }

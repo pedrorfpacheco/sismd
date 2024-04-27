@@ -81,6 +81,16 @@ public class ApplyFilters {
 
                 System.out.println("Conditional blur filter applied to image on file conditionalBlur.jpg");
                 break;
+            case "7":
+                long startTime7 = System.currentTimeMillis();
+
+                filters.BrighterFilterMultiThread("brighterMultiThread.jpg", 128, numThreads);
+
+                long endTime7 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime7 - startTime7) + " milliseconds");
+
+                System.out.println("Brighter filter applied to image on file brighterMultiThread.jpg");
+                break;
             case "8":
                 long startTime8 = System.currentTimeMillis();
 

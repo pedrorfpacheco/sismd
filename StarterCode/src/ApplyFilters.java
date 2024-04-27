@@ -155,7 +155,8 @@ public class ApplyFilters {
             case "13":
                 long startTime13 = System.currentTimeMillis();
 
-                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", 128, numThreads);
+                threads = Runtime.getRuntime().availableProcessors();
+                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", 128, threads);
 
                 long endTime13 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime13 - startTime13) + " milliseconds");

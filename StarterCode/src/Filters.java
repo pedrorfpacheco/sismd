@@ -374,28 +374,43 @@ public class Filters {
 
     // ##### Thread pool #####
 
-    public void BrighterFilterThreadPool(String outputFile,int value, int numThreads) throws InterruptedException{
-        //Color[][] blurredImage = new Color[image.length][image[0].length];
-        //int width = image.length;
-        int height = image[0].length;
+    public void BrighterFilterThreadPool(String outputFile, int brightnessValue, int numThreads) throws InterruptedException{
+        int height = image.length;
+        int width = image[0].length;
+
+        Color[][] filteredImage = new Color[height][width];
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
-        int rowsPerTask = height / numThreads;
-        int remainingRows = height % numThreads;
+        for (int y = 0; y < height; y++) {
+            final int currentY = y;
+            executor.execute(() -> {
+                for (int x = 0; x < width; x++) {
+                    Color pixel = image[currentY][x];
+                    int r = pixel.getRed();
+                    int g = pixel.getGreen();
+                    int b = pixel.getBlue();
 
-        int startRow = 0;
-        for (int i = 0; i < numThreads; i++) {
-            int rowsForThisTask = rowsPerTask + (i < remainingRows ? 1 : 0);
-            int endRow = startRow + rowsForThisTask;
-            executor.submit(new BrighterFilterTask(image, startRow, endRow, value));
-            startRow = endRow;
+                    // Adiciona o valor de brilho a cada canal de cor
+                    r = Math.min(255, Math.max(0, r + brightnessValue));
+                    g = Math.min(255, Math.max(0, g + brightnessValue));
+                    b = Math.min(255, Math.max(0, b + brightnessValue));
+
+                    filteredImage[currentY][x] = new Color(r, g, b);
+                }
+            });
         }
 
         executor.shutdown();
-        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        Utils.writeImage(image, outputFile);
+        // Aguarda até que todas as tarefas tenham sido concluídas ou que o tempo limite seja atingido
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
+        }
+
+        Utils.writeImage(filteredImage, outputFile);
     }
 
     public void GrayFilterThreadPool(String outputFile, int numThreads) throws IOException, InterruptedException {

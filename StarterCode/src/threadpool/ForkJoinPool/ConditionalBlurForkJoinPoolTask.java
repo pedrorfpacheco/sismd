@@ -6,7 +6,7 @@ import java.util.concurrent.RecursiveAction;
 import static utils.Utils.BlurCondition;
 import static utils.Utils.BlurPixel;
 
-public class ConditionalBlurFilterForkJoinPoolTask extends RecursiveAction {
+public class ConditionalBlurForkJoinPoolTask extends RecursiveAction {
 
     private static final int THRESHOLD = 50000;
     private final Color[][] image;
@@ -14,7 +14,7 @@ public class ConditionalBlurFilterForkJoinPoolTask extends RecursiveAction {
     private final int startX, startY, endX, endY;
     private final int matrixSize;
 
-    public ConditionalBlurFilterForkJoinPoolTask(Color[][] image, Color[][] tmp, int startX, int startY, int endX, int endY, int matrixSize) {
+    public ConditionalBlurForkJoinPoolTask(Color[][] image, Color[][] tmp, int startX, int startY, int endX, int endY, int matrixSize) {
         this.image = image;
         this.tmp = tmp;
         this.startX = startX;
@@ -34,10 +34,10 @@ public class ConditionalBlurFilterForkJoinPoolTask extends RecursiveAction {
             int midY = startY + (endY - startY) / 2;
 
             invokeAll(
-                    new ConditionalBlurFilterForkJoinPoolTask(image, tmp, startX, startY, midX, midY, matrixSize), // Top left quadrant
-                    new ConditionalBlurFilterForkJoinPoolTask(image, tmp, midX, startY, endX, midY, matrixSize), // Top right quadrant
-                    new ConditionalBlurFilterForkJoinPoolTask(image, tmp, startX, midY, midX, endY, matrixSize), // Bottom left quadrant
-                    new ConditionalBlurFilterForkJoinPoolTask(image, tmp, midX, midY, endX, endY, matrixSize) // Bottom right quadrant
+                new ConditionalBlurForkJoinPoolTask(image, tmp, startX, startY, midX, midY, matrixSize), // Top left quadrant
+                new ConditionalBlurForkJoinPoolTask(image, tmp, midX, startY, endX, midY, matrixSize),   // Top right quadrant
+                new ConditionalBlurForkJoinPoolTask(image, tmp, startX, midY, midX, endY, matrixSize),   // Bottom left quadrant
+                new ConditionalBlurForkJoinPoolTask(image, tmp, midX, midY, endX, endY, matrixSize)      // Bottom right quadrant
             );
         }
     }

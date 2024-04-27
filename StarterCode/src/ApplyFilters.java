@@ -231,6 +231,16 @@ public class ApplyFilters {
 
                 System.out.println("\nBlur filter applied to image on file blurCompletableFutures.jpg");
                 break;
+            case "30":
+                long startTime30 = System.currentTimeMillis();
+
+                filters.ConditionalBlurFilterCompletableFuture("conditionalBlurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+
+                long endTime30 = System.currentTimeMillis();
+                System.out.println("\nExecution time: " + (endTime30 - startTime30) + " milliseconds");
+
+                System.out.println("\nConditional Blur filter applied to image on file conditionalBlurCompletableFutures.jpg");
+                break;
             default:
                 System.out.println("\nInvalid filter");
                 break;

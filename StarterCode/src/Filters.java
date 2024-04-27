@@ -1,12 +1,10 @@
-import threadpool.CompletableFutures.BlurCompletableFutureTask;
-import threadpool.CompletableFutures.GrayCompletableFuturesTask;
-import threadpool.CompletableFutures.GlassCompletableFuturesTask;
+import threadpool.CompletableFutures.*;
 import threadpool.Executor.BlurFilterTask;
 import threadpool.Executor.ConditionalBlurTask;
 import threadpool.Executor.GlassFilterTask;
 import threadpool.Executor.GrayFilterTask;
 import threadpool.ForkJoinPool.BlurFilterForkJoinPoolTask;
-import threadpool.ForkJoinPool.ConditionalBlurFilterForkJoinPoolTask;
+import threadpool.ForkJoinPool.ConditionalBlurForkJoinPoolTask;
 import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
 import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
 import threads.BlurFilterThread;
@@ -392,13 +390,13 @@ public class Filters {
         Utils.writeImage(blurredImage, outputFile);
     }
 
-    public void ConditionalBlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) throws InterruptedException {
+    public void ConditionalBlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) {
         int width = image.length;
         int height = image[0].length;
         Color[][] tmp = new Color[width][height];
         ForkJoinPool pool = new ForkJoinPool(numThreads);
 
-        ConditionalBlurFilterForkJoinPoolTask task = new ConditionalBlurFilterForkJoinPoolTask(image, tmp, 0, 0, width, height, matrixSize);
+        ConditionalBlurForkJoinPoolTask task = new ConditionalBlurForkJoinPoolTask(image, tmp, 0, 0, width, height, matrixSize);
 
         pool.invoke(task);
 
@@ -500,5 +498,24 @@ public class Filters {
         executor.shutdown();
         Utils.writeImage(glassImage, outputFile);
     }
-}
 
+    public void ConditionalBlurFilterCompletableFuture(String outputFile, int numThreads, int matrixSize) {
+        int width = image.length;
+        int height = image[0].length;
+        int chunkWidth = width / numThreads;
+        Color[][] tmp = new Color[width][height];
+        CompletableFuture[] futures = new CompletableFuture[numThreads];
+
+        for (int i = 0; i < numThreads; i++) {
+            int startColumn = i * chunkWidth;
+            int endColumn = Math.min(startColumn + chunkWidth, width);
+            futures[i] = CompletableFuture.runAsync(new ConditionalBlurCompletableFutureTask(image, tmp, startColumn, endColumn, height, matrixSize));
+        }
+
+        CompletableFuture.allOf(futures).join();
+
+        Utils.writeImage(tmp, outputFile);
+
+    }
+
+}

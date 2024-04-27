@@ -355,22 +355,19 @@ public class Filters {
     }
 
     public void BrighterFilterMultiThread(String outputFile, int value, int numThreads) throws IOException, InterruptedException {
-        Color[][] brighter = new Color[image.length][image[0].length];
         Thread[] threads = new Thread[numThreads];
-        int rowsPerThread = brighter.length / numThreads;
+        int rowsPerThread = image.length / numThreads;
 
         for (int i = 0; i < numThreads; i++) {
             int startRow = i * rowsPerThread;
-            int endRow = (i == numThreads - 1) ? brighter.length : (startRow + rowsPerThread);
-            threads[i] = new Thread(new BrighterFilterThread(image,brighter, startRow, endRow, value));
+            int endRow = (i == numThreads - 1) ? image.length : (startRow + rowsPerThread);
+            threads[i] = new Thread(new BrighterFilterThread(image, startRow, endRow, value));
             threads[i].start();
         }
-
         for (Thread thread : threads) {
             thread.join();  // Wait for all threads to finish
         }
-
-        Utils.writeImage(brighter, outputFile);  // Assuming Utils.writeImage handles writing the image file
+        Utils.writeImage(image, outputFile);
     }
 
 
@@ -527,10 +524,12 @@ public class Filters {
     // ##### Fork join #####
 
     public void BlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) throws InterruptedException{
-        Color[][] blurredImage = new Color[image.length][image[0].length];
+        int width = image.length;
+        int height = image[0].length;
+        Color[][] blurredImage = new Color[width][height];
         ForkJoinPool pool = new ForkJoinPool(numThreads);
 
-        BlurFilterForkJoinPoolTask task = new BlurFilterForkJoinPoolTask(image, blurredImage,0, image.length, matrixSize);
+        BlurFilterForkJoinPoolTask task = new BlurFilterForkJoinPoolTask(image, blurredImage,0,0, width, height, matrixSize);
 
         pool.invoke(task);
 
@@ -590,29 +589,21 @@ public class Filters {
 
     // ##### Completable Future #####
     public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException, ExecutionException {
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        int height = image.length;
         int width = image.length;
-        int numTasks = numThreads;//((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
-        int chunkHeight = (height + numTasks - 1) / numTasks;
-        List<Future<CompletableFuture<Color[][]>>> futures = new ArrayList<>();
+        int height = image[0].length;
+        int chunkWidth = width / numThreads;
+        Color[][] tmp = new Color[width][height];
+        CompletableFuture[] futures = new CompletableFuture[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
-            int startRow = i * chunkHeight;
-            int endRow = Math.min(startRow + chunkHeight, height);
-            futures.add(executor.submit(new BlurCompletableFutureTask(image,matrixSize, startRow, endRow)));
+            int startColumn = i * chunkWidth;
+            int endColumn = Math.min(startColumn + chunkWidth, width);
+            futures[i] = CompletableFuture.runAsync(new BlurCompletableFutureTask(image, tmp, startColumn, endColumn, height, matrixSize));
         }
 
-        Color[][] blurredImage = new Color[image.length][image[0].length];
-        for (Future<CompletableFuture<Color[][]>> future : futures) {
-            CompletableFuture<Color[][]> completableFuture = future.get();
-            Color[][] partialBlurImage = completableFuture.get();
-            System.out.println(partialBlurImage.length + "  " + partialBlurImage[0].length);
-            System.arraycopy(partialBlurImage, 0, blurredImage, partialBlurImage.length * futures.indexOf(future), partialBlurImage.length);
-        }
+        CompletableFuture.allOf(futures).join();
 
-        executor.shutdown();
-        Utils.writeImage(blurredImage, outputFile);
+        Utils.writeImage(tmp, outputFile);
     }
 
     public void GrayFilterCompletableFuture(String outputFile, int numThreads) throws InterruptedException, ExecutionException {

@@ -1,57 +1,33 @@
 package threadpool.CompletableFutures;
 
 import java.awt.*;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
+import static utils.Utils.BlurPixel;
 
-public class BlurCompletableFutureTask implements Callable<CompletableFuture<Color[][]>> {
-    private Color[][] image;
-    private int startRow;
-    private int endRow;
-    private int matrixSize;
+public class BlurCompletableFutureTask implements Runnable {
+    private final Color[][] image;
+    private final Color[][] tmp;
+    private final int startColumn;
+    private final int endColumn;
+    private final int height;
+    private final int matrixSize;
 
-    public BlurCompletableFutureTask(Color[][] image, int matrixSize, int startRow, int endRow) {
+    public BlurCompletableFutureTask(Color[][] image, Color[][] tmp, int startColumn, int endColumn, int height, int matrixSize) {
         this.image = image;
+        this.tmp = tmp;
+        this.startColumn = startColumn;
+        this.endColumn = endColumn;
+        this.height = height;
         this.matrixSize = matrixSize;
-        this.endRow = endRow;
-        this.startRow = startRow;
     }
 
     @Override
-    public CompletableFuture<Color[][]> call() {
-        return CompletableFuture.supplyAsync(()->{
-        Color[][] blurImage = new Color[endRow - startRow][image[0].length];
-        int offset = matrixSize / 2;
-
-        for (int i = startRow; i < endRow; i++) {
-            for (int j = 0; j < image[0].length; j++) {
-                int redSum = 0, greenSum = 0, blueSum = 0;
-                int count = 0;
-
-                for (int ki = -offset; ki <= offset; ki++) {
-                    for (int kj = -offset; kj <= offset; kj++) {
-                        int ni = i + ki;
-                        int nj = j + kj;
-
-                        if (ni >= 0 && ni < image.length && nj >= 0 && nj < image[0].length) {
-                                Color neighborColor = image[ni][nj];
-                                redSum += neighborColor.getRed();
-                                greenSum += neighborColor.getGreen();
-                                blueSum += neighborColor.getBlue();
-                                count++;
-                        }
-                    }
-                }
-
-                int avgRed = redSum / count;
-                int avgGreen = greenSum / count;
-                int avgBlue = blueSum / count;
-
-                blurImage[i][j] = new Color(avgRed, avgGreen, avgBlue);
+    public void run() {
+        for (int c = startColumn; c < endColumn; c++) {
+            for (int l = 0; l < height; l++) {
+                Color pixel = image[c][l];
+                pixel = BlurPixel(image, c, l, matrixSize);
+                tmp[c][l] = pixel;
             }
         }
-        return blurImage;
-        });
     }
 }

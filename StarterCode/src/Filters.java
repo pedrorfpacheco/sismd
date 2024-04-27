@@ -373,9 +373,9 @@ public class Filters {
 
     // ##### Thread pool #####
 
-    public void BrigtherFilterThreadPool(String outputFile,int value, int numThreads) throws InterruptedException{
+    public void BrighterFilterThreadPool(String outputFile,int value, int numThreads) throws InterruptedException{
         //Color[][] blurredImage = new Color[image.length][image[0].length];
-        int width = image.length;
+        //int width = image.length;
         int height = image[0].length;
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);

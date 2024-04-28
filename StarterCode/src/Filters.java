@@ -777,43 +777,44 @@ public class Filters {
     public void BrighterFilterCompletableFuture(String outputFile, int numThreads, int brightnessValue) {
         int height = image.length;
         int width = image[0].length;
-
         Color[][] filteredImage = new Color[height][width];
 
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        CompletableFuture<Void>[] futures = new CompletableFuture[numThreads];
 
-        CompletableFuture<Void>[] futures = new CompletableFuture[height];
+        int chunkHeight = height / numThreads;
 
-        for (int y = 0; y < height; y++) {
-            int currentY = y;
+        for (int t = 0; t < numThreads; t++) {
+            final int startRow = t * chunkHeight;
+            final int endRow = (t == numThreads - 1) ? height : (t + 1) * chunkHeight;
+
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                for (int x = 0; x < width; x++) {
-                    Color pixel = image[currentY][x];
-                    int r = pixel.getRed();
-                    int g = pixel.getGreen();
-                    int b = pixel.getBlue();
+                for (int y = startRow; y < endRow; y++) {
+                    for (int x = 0; x < width; x++) {
+                        Color pixel = image[y][x];
+                        int r = pixel.getRed();
+                        int g = pixel.getGreen();
+                        int b = pixel.getBlue();
 
-                    // Adiciona o valor de brilho a cada canal de cor
-                    r = Math.min(255, Math.max(0, r + brightnessValue));
-                    g = Math.min(255, Math.max(0, g + brightnessValue));
-                    b = Math.min(255, Math.max(0, b + brightnessValue));
+                        // Adiciona o valor de brilho a cada canal de cor
+                        r = Math.min(255, Math.max(0, r + brightnessValue));
+                        g = Math.min(255, Math.max(0, g + brightnessValue));
+                        b = Math.min(255, Math.max(0, b + brightnessValue));
 
-                    filteredImage[currentY][x] = new Color(r, g, b);
+                        filteredImage[y][x] = new Color(r, g, b);
+                    }
                 }
-            }, executor);
+            });
 
-            futures[y] = future;
+            futures[t] = future;
         }
 
         CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(futures);
 
         try {
             allOfFuture.get();
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException e) {
             System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
         }
-
-        executor.shutdown();
 
         Utils.writeImage(filteredImage, outputFile);
     }

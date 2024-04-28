@@ -705,7 +705,7 @@ public class Filters {
         Utils.writeImage(glassImage, outputFile);
     }
 
-    public void ConditionalBlurFilterCompletableFuture(String outputFile, int numThreads, int matrixSize) {
+    public void ConditionalBlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) {
         int width = image.length;
         int height = image[0].length;
         int chunkWidth = width / numThreads;
@@ -714,7 +714,7 @@ public class Filters {
 
         for (int i = 0; i < numThreads; i++) {
             int startColumn = i * chunkWidth;
-            int endColumn = Math.min(startColumn + chunkWidth, width);
+            int endColumn = (i < numThreads - 1) ? startColumn + chunkWidth : width;
             futures[i] = CompletableFuture.runAsync(new ConditionalBlurCompletableFutureTask(image, tmp, startColumn, endColumn, height, matrixSize));
         }
 

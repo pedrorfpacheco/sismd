@@ -9,14 +9,14 @@
 
 #### Brightness
 
-1. Sequential
+1. **Sequential** - 
    O método BrighterFilter aumenta o brilho de cada pixel da imagem. Este algoritmo percorre cada pixel da imagem, aumenta os valores de vermelho (red), verde (green) e azul (blue) por um valor definido, mas sem exceder o máximo de 255 para cada cor. Se o aumento proposto para qualquer cor ultrapassar 255, essa cor é definida como 255. Depois de ajustar as cores, o pixel é atualizado na imagem temporária.
 
-2. Multithreaded
+2. **Multithreaded** - 
    
 
-3. Thread-Pool
-   1. Executor
+3. **Thread-Pool**
+   1. **Executor** - 
    
       O método BrighterFilterThreadPool aplica um filtro para aumentar o brilho de uma imagem usando uma pool de threads para processamento paralelo, o que melhora a eficiência, especialmente em imagens grandes. Este método divide a imagem em faixas horizontais, onde cada thread em um pool fixo processa uma faixa, aumentando o brilho de cada pixel na faixa designada.
    
@@ -79,41 +79,71 @@
 
 #### Glass
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+1. **Sequential** -
+   Cria-se uma cópia da imagem original para armazenar a imagem processada.  
+   Em seguida, percorre-se cada pixel da imagem original. Para cada pixel, calcula-se um deslocamento aleatório dentro de um raio especificado (5 pixeis).  
+   Substituiu-se o pixel original pelo pixel deslocado na imagem copiada.  
+   Finalmente, escreve-se a imagem processada num arquivo.
+
+
+2. **Multithreaded** -
+   Cria-se uma cópia da imagem original para armazenar a imagem processada.  
+   Em seguida, dividi-se a imagem em várias secções, cada uma processada por uma thread separada.  
+   Para cada thread, percorre cada pixel na secção atribuída a essa thread. Para cada pixel, calcula um deslocamento aleatório dentro de um raio especificado (5 pixeis).  
+   Substituiu-se o pixel original pelo pixel deslocado na imagem copiada.  
+   Finalmente, espera-se que todas as threads terminem e escreve a imagem processada num arquivo.
+
+
+3. **Thread-Pool**
+   1. **Executor** -
+      Cria um ExecutorService com um número fixo de threads igual ao número de núcleos de CPU disponíveis.  
+      Divide a imagem em várias secções, cada uma processada por uma tarefa separada. Cada tarefa foi responsável por aplicar o filtro de vidro a uma secção específica da imagem.  
+      Submete todas as tarefas ao ExecutorService. Cada tarefa foi executada por uma thread do pool de threads.  
+      Usa o método shutdown do ExecutorService para iniciar um desligamento ordenado, no qual as tarefas previamente submetidas são executadas, mas não são aceites novas tarefas. Em seguida, chama o método awaitTermination para bloquear até que todas as tarefas tenham concluído a execução após um pedido de desligar.  
+      Escreve a imagem processada em um arquivo.
+   
+   2. **Fork Join Pool** -
+      Cria um ForkJoinPool com um número fixo de threads igual ao número de núcleos de CPU disponíveis.  
+      Cria uma tarefa GlassFilterForkJoinPoolTask que processa toda a imagem. Se a imagem era grande demais para ser processada eficientemente por uma única tarefa, divide a tarefa em duas tarefas menores para processaram metade da imagem cada uma.  
+      Submete a tarefa ao ForkJoinPool. A tarefa foi executada por uma thread do pool de threads.  
+      Usa o método invoke do ForkJoinPool para iniciar a execução da tarefa e esperar até que ela fosse concluída.  
+      Por fim, escreve a imagem processada em um arquivo.
+   
+   3. **Completable Futures** -
+      Cria um ExecutorService com um número fixo de threads igual ao número de núcleos de CPU disponíveis.  
+      Divide a imagem em várias seções, cada uma processada por uma tarefa separada. Cada tarefa foi responsável por aplicar o filtro de vidro a uma seção específica da imagem.  
+      Submete todas as tarefas ao ExecutorService. Cada tarefa foi executada por uma thread do pool de threads.  
+      Usa o método allOf do CompletableFuture para criar um CompletableFuture que é concluído quando todas as tarefas são concluídas. Em seguida, você chamou o método join para bloquear até que todas as tarefas tenham concluído a execução.  
+      Por fim, escreve a imagem processada em um arquivo.
 
 #### Blur
 
-1. Sequential
+1. **Sequential** - 
 
    Para cada pixel da imagem, ele calcula uma média dos valores de vermelho, verde e azul dos pixels vizinhos, incluindo o próprio pixel, numa submatriz de tamanho definido por *matrixSize*. Este tamanho determina quão longe de cada pixel a média deve considerar, criando um efeito de desfoque ao "misturar" os valores de cores dos pixels adjacentes.
 
    O método percorre todos os pixels da imagem, utilizando um deslocamento (offset) para definir a área da submatriz centrada em cada pixel. Os novos valores médios de cor calculados substituem os originais, resultando numa imagem desfocada.
    
 
-2. Multithreaded
+2. **Multithreaded** - 
    O método BlurFilterMultiThread aplica um filtro numa imagem utilizando múltiplas *threads* para processar de forma paralela e aumentar a eficiência. Cada thread é responsável por desfocar uma parte específica. A imagem é dividida em segmentos horizontais, e cada segmento é processado por uma *thread* diferente. O número de linhas que cada thread processa é calculado para distribuir as linhas da imagem de maneira igualitária entre as *threads*. Após iniciar todas as *threads*, o método espera que todas terminem sua execução usando o método *join()*.
 
-3. Thread-Pool
-   1. Executor
+3. **Thread-Pool**
+   1. **Executor** - 
 
       O método BlurFilterThreadPool usa um pool de threads para aplicar um filtro de desfoque a uma imagem, melhorando a eficiência para imagens grandes ou para sistemas com múltiplos processadores. A imagem é dividida em várias partes, cada uma sendo processada em paralelo por diferentes threads. A quantidade de tarefas é determinada pelo tamanho da imagem e pelo número de threads, ajustando para que cada tarefa tenha um trabalho significativo mas não muito pequeno (mínimo de 10000 pixels por tarefa).
 
       Cada tarefa é responsável por aplicar o desfoque em uma faixa horizontal específica da imagem, calculada com base na altura total da imagem e no número de tarefas. Depois de iniciar todas as tarefas, o método espera que todas terminem usando awaitTermination.
       
 
-   2. Fork Join Pool
+   2. **Fork Join Pool** - 
 
       O método BlurFilterForkJoinPool utiliza a estrutura ForkJoinPool para aplicar um filtro de desfoque a uma imagem de maneira eficiente e paralela. A imagem é processada dividindo-a em sub-regiões menores, que são então atribuídas a diferentes threads gerenciadas pelo ForkJoinPool. Cada thread trabalha em uma seção da imagem, aplicando o filtro de desfoque, e esse processo é feito de maneira recursiva até que as seções atinjam um tamanho de limite (THRESHOLD), momento em que o filtro é aplicado diretamente.
 
       A classe BlurFilterForkJoinPoolTask, que estende RecursiveAction, é responsável por essa divisão e pelo processamento do filtro. Se a área a ser processada é pequena o suficiente (menor que o THRESHOLD), o filtro é aplicado diretamente. Caso contrário, a tarefa é dividida em quatro sub-tarefas, processando cada quadrante da área de forma recursiva.
       
 
-   3. Completable Futures
+   3. **Completable Futures** - 
 
       
       
@@ -142,12 +172,12 @@
 
 #### Grayscale
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+1. **Sequential** - 
+2. **Multithreaded** - 
+3. **Thread-Pool** - 
+   1. **Executor** - 
+   2. **Fork Join Pool** - 
+   3. **Completable Futures** - 
 
 #### Swirl
 

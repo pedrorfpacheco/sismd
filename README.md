@@ -435,7 +435,7 @@ It has the advantage of requiring a small amount of memory.
 
 The Parallel Garbage Collector runs on multiple threads.
 As such, it is recommended for multicore systems.
-It is designed to reduce CPU time spent on garbage collection, being ideal for applications with little user interaction.
+It is designed to reduce CPU time spent on garbage collection, being ideal for long-running background tasks.
 
 #### G1 Garbage Collector
 
@@ -463,11 +463,11 @@ The following tests were conducted with the following conditions:
    * filter - Glass with fork join pool implementation.
 
 | Garbage Collector | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
-| ------------------ | ----------- | ----------- | ----------- |-------------------|
-| Serial             |  361      |  322      |  329      | 337.33            |
-| Parallel           |  358      |  321      |  291      | 323.33            |
-| G1                 |  313      |  331      |  321      | 321.66            |
-| Z                  |  437      |  412      |  425      | 424.66            |
+| ------------------ |-------------|-------------|-------------|----------------|
+| Serial             | 361         | 322         | 329         | 337.33         |
+| Parallel           | 358         | 321         | 291         | 323.33         |
+| G1                 | 313         | 331         | 321         | 321.66         |
+| Z                  | 437         | 412         | 425         | 424.66         |
 
 The Shenandoah Garbage Collector was not tested as it is not supported on the used JDK distribution (Oracle).
 
@@ -476,3 +476,25 @@ This was expected, as the G1 Garbage Collector has a good balance of throughput 
 
 #### Tuning
 
+The G1 Garbage Collector has a few possible tuning options that can be used to improve performance.
+The two main ones are the following:
+   * -XX:MaxGCPauseMillis=n - sets the maximum pause time goal. The default value is 200ms.
+   * -XXInitiatingHeapOccupancyPercent=n - sets the percentage of the heap occupancy that triggers a marking cycle. The default value is 45.
+
+We experimented with different values, and found best results with the following configuration
+   * -XX:MaxGCPauseMillis=215, to have a less demanding pause time goal, as the default value was a little low and caused the application to run slower;
+   * -XXInitiatingHeapOccupancyPercent=65, to trigger a marking cycle at a higher heap occupancy percentage, as we found the default value to be unnecessarily low for this application.
+
+So the command to run the application with these options would be:
+
+``
+java -XX:+UseG1GC -XX:MaxGCPauseMillis=215 -XX:InitiatingHeapOccupancyPercent=65 -jar SISMD_Project.jar
+``
+
+With these values, we obtained the following results for the same conditions as before:
+
+| Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|-------------|-------------|-------------|-------------------|
+| 289         | 289         | 285         | 287.66            |
+
+As we can see, the average execution time was improved by 44ms, which brings the value below 300ms.

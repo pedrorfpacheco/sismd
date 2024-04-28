@@ -380,7 +380,7 @@ public class Filters {
 
         for (int y = 0; y < height; y++) {
             final int currentY = y;
-            executor.execute(() -> {
+            executor.submit(() -> {
                 for (int x = 0; x < width; x++) {
                     Color pixel = image[currentY][x];
                     int r = pixel.getRed();
@@ -525,7 +525,7 @@ public class Filters {
 
         for (int i = 0; i < numThreads; i++) {
             final int threadIndex = i;
-            executor.execute(() -> {
+            executor.submit(() -> {
                 int startY = threadIndex * chunkHeight;
                 int endY = (threadIndex == numThreads - 1) ? height : startY + chunkHeight;
 

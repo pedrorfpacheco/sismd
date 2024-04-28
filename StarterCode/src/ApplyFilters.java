@@ -368,6 +368,9 @@ public class ApplyFilters {
         final String filter = chooseFilter();
 
         switch (filter) {
+            case "1":
+                BrightTestsReport brighterTestsReport = new BrightTestsReport();
+                brighterTestsReport.runTests(filePath);
             case "2":
                 GrayTestsReport grayTestsReport = new GrayTestsReport();
                 grayTestsReport.runTests(filePath);

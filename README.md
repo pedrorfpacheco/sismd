@@ -213,8 +213,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
-![turtle-metrics.png](StarterCode/assets/gray/city.jpg)
-
+<img src="./StarterCode/assets/gray/city.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequencial** -
 
@@ -249,8 +248,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 ![city-chart.png](StarterCode/assets/swirl/city-chart.png)
 
 #### Glass
-
-![turtle-metrics.png](StarterCode/assets/glass/city.jpg)
+<img src="./StarterCode/assets/glass/city.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequencial** - 
 
@@ -288,12 +286,21 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Conditional Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+processor: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
+
+<img src="./StarterCode/assets/conditionalBlur/city-output.jpg" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 3606        | 2986        | 2947        | 3179              |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![city-table.png](StarterCode/assets/conditionalBlur/city-table.png)
+![city-graph.png](StarterCode/assets/conditionalBlur/city-graph.png)
 
 ### Tree.jpg
 
@@ -393,12 +400,37 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Conditional Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+processor: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
+
+<img src="./StarterCode/assets/conditionalBlur/tree-output.jpg" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 361         | 315         | 222         | 299               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![tree-table.png](StarterCode/assets/conditionalBlur/tree-table.png)
+![tree-graph.png](StarterCode/assets/conditionalBlur/tree-graph.png)
+
+### Tree.jpg
+
+#### Brightness
+<img src="./StarterCode/assets/brighter/tree-brighter.png" alt="drawing" width="500"/></br>
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|------------|-------------|-------------|-------------------|
+| Tree       | 187        | 193         | 190         | 190               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![tree-metrics.png](StarterCode/assets/brighter/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/brighter/tree-chart.png)
 
 ### Turtle.jpg
 
@@ -499,12 +531,21 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Conditional Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+processor: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
+
+<img src="./StarterCode/assets/conditionalBlur/turtle-output.png" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 123         | 48          | 36          | 69                |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![turtle-table.png](StarterCode/assets/conditionalBlur/turtle-table.png)
+![turtle-graph.png](StarterCode/assets/conditionalBlur/turtle-graph.png)
 
 ### Conclusões das implementações
 
@@ -567,12 +608,12 @@ The following tests were conducted with the following conditions:
    * number of threads - 9.
    * filter - Glass with fork join pool implementation.
 
-| Garbage Collector | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
-| ------------------ |-------------|-------------|-------------|----------------|
-| Serial             | 361         | 322         | 329         | 337.33         |
-| Parallel           | 358         | 321         | 291         | 323.33         |
-| G1                 | 313         | 331         | 321         | 321.66         |
-| Z                  | 437         | 412         | 425         | 424.66         |
+| Garbage Collector   | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|---------------------|-------------|-------------|-------------|-------------------|
+| Serial              | 361         | 322         | 329         | 337.33            |
+| Parallel            | 358         | 321         | 291         | 323.33            |
+| G1                  | 313         | 331         | 321         | 321.66            |
+| Z                   | 437         | 412         | 425         | 424.66            |
 
 The Shenandoah Garbage Collector was not tested as it is not supported by the used JDK distribution (Oracle).
 

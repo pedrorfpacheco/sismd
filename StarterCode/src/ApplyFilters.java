@@ -385,7 +385,10 @@ public class ApplyFilters {
                 BlurTestsReport blurTestsReport = new BlurTestsReport();
                 blurTestsReport.runTests(filePath);
                 break;
-
+            case "6":
+                ConditionalBlurTestsReport conditionalBlurTestsReport = new ConditionalBlurTestsReport();
+                conditionalBlurTestsReport.runTests(filePath);
+                break;
             default:
                 System.out.println("Invalid filter");
         }

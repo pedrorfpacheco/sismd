@@ -213,14 +213,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/city.jpg)
+
+
 1. **Sequencial** -
 
    | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
    |------------|-------------|-------------|-------------|-------------------|
    | City       | 1955        | 1881        | 1982        | 1939,33           |
 
-2. **Multithreaded and Thread-Pool** - 
+2. **Multithreaded and Thread-Pool** -
 
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
 Todos os tempos são resultantes de uma média de três execuções.
 
 ![city-metrics.png](StarterCode/assets/gray/city-metrics.png)
@@ -246,6 +250,8 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
+![turtle-metrics.png](StarterCode/assets/glass/city.jpg)
+
 1. **Sequencial** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -254,6 +260,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 2. **Multithreaded and Thread-Pool** - 
 
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
 Todos os tempos são resultantes de uma média de três execuções.
 
 ![city-metrics.png](StarterCode/assets/glass/city-chart.png)
@@ -309,6 +316,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/tree.jpg)
+
+
 1. **Sequencial** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -318,6 +328,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 2. **Multithreaded and Thread-Pool** - 
 
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
 Todos os tempos são resultantes de uma média de três execuções.
 ![tree-metrics.png](StarterCode/assets/gray/tree-metrics.png)
 ![tree-chart.png](StarterCode/assets/gray/tree-chart.png)
@@ -343,9 +354,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
+![turtle-metrics.png](StarterCode/assets/glass/tree.jpg)
+
 1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 260         | 236         | 250         | 248,66            |
+
+
 2. **Multithreaded and Thread-Pool** -
 
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
 Todos os tempos são resultantes de uma média de três execuções.
 
 ![tree-metrics.png](StarterCode/assets/glass/tree-metrics.png)
@@ -401,6 +421,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/turtle.jpg)
+
+
 1. **Sequential** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -410,6 +433,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 2. **Multithreaded and Thread-Pool** - 
 
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
 Todos os tempos são resultantes de uma média de três execuções.
 ![turtle-metrics.png](StarterCode/assets/gray/turtle-metrics.png)
 ![turtle-chart.png](StarterCode/assets/gray/turtle-chart.png)
@@ -435,6 +459,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
+![turtle-metrics.png](StarterCode/assets/glass/turtle.jpg)
+
+
 1. **Sequencial** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -443,6 +470,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 
 2. **Multithreaded and Thread-Pool** - 
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
 
 ![turtle-metrics.png](StarterCode/assets/glass/turtle-metrics.png)
 ![turtle-chart.png](StarterCode/assets/glass/turtle-chart.png)

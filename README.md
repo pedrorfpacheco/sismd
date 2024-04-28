@@ -184,12 +184,27 @@
 #### Conditional Blur
 
 1. Sequential
-2. 
+
+São percorridos todos os pixeis da imagem, verificando se o pixel tem uma certa quantidade de vermelho (50) e aplicando o blur quando esta condição se verifica.
+
 2. Multithreaded
+
+A imagem é divida em várias partes, cada uma processada por uma thread separada. Espera-se que todas as threads terminem usando uma countdown latch. 
+
 3. Thread-Pool
+
+
    1. Executor
+
+Semelhante ao multithreaded, mas usando um executor service para gerir as threads e o método awaitTermination para esperar que todas as threads terminem.
+
    2. Fork Join Pool
+
+A imagem é dividida recursivamente em 4 quadrantes, cada um processado por uma thread separada. O processamento ocorre quando a parte restante da imagem é pequena o suficiente (50000 pixeis).
+
    3. Completable Futures
+
+A imagem é dividida por uma quantidade de colunas dependente da quantidade de threads. Para cada conjunto é criado um CompletableFuture para o processar. O método CompletableFuture.allOf é usado para combinar todos os CompletableFutures num só e o método join() é usado para esperar que este termine.
 
 ## Resultados
 

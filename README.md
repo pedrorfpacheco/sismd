@@ -70,7 +70,7 @@
 
 #### Swirl
 
-1. Sequential
+1. **Sequential**</br>
    O código começa determinando as dimensões da imagem, ou seja, sua altura e largura. 
    Em seguida, são calculadas as coordenadas do centro da imagem, que serão usadas como base para o filtro swirl. 
    Além disso, é definido o ângulo máximo de rotação, representado por "maxAngle" que será aplicado com base na distância do pixel ao centro da imagem.
@@ -83,23 +83,23 @@
    Usando o ângulo calculado, são calculadas as novas coordenadas do pixel após a aplicação do filtro swirl. 
    Isso é feito usando as fórmulas de transformação mencionadas na documentaçaão do projeto.
 
-3. Multithreaded
+3. **Multithreaded**</br>
    O código cria várias threads para processar a imagem em paralelo. 
    Cada thread é responsável por uma parte da imagem, dividida igualmente com base no número de threads especificado.
    Caso nao seja possível dividir igualitariamente, a última thread assume a porção excedente da imagem.
    Para cada parte da imagem atribuída a uma thread, o código itera sobre cada pixel e aplica a transformação descrita anteriormente.
-3. Thread-Pool
-   1. Executor
+3. **Thread-Pool**
+   1. **Executor**</br>
       Muito semelhante aos anteriores onde cada thread é responsável por uma parte específica da imagem, e o filtro de distorção é aplicado. 
       O que diferencia essa implementaçao é que o código utiliza um ExecutorService para gerenciar o pool de threads e aguarda a conclusão do processamento antes de continuar.
       Nesse caso, nao sendo necessário criar e dar start nas threads e nem fazer o join do trabalho.
-   2. Fork Join Pool
+   2. **Fork Join Pool**</br>
       Nesse caso, tambeém existe divisao das tarefas.
       Cada thread é responsável por processar uma parte específica da imagem.
       A classe `SwirlFilterForkJoinPoolTask` representa uma tarefa recursiva que aplica o filtro de distorção a uma parte da imagem.
       Essa parte foi definica como sendo a linha de pixeis da imagem. 
       Enquanto for possível dividir a imagem, novos empilhamentos de execução são criados e invocados recursivamente.
-   3. Completable Futures
+   3. **Completable Futures** </br>
       Esse algoritimo por sua vez executa de forma assíncrona usando CompletableFuture. 
       Ele começa definindo as dimensões da imagem e os parâmetros do filtro como todos os outros. 
       Para cada parte da imagem atribuída a uma tarefa, é criado um CompletableFuture que executa de maneira assíncrona para processar cada pixel (a mesma divisão aqui foi explicada no tópico de Miltithreads).
@@ -194,12 +194,9 @@
 
 1. Sequential
 2. Multithreaded
-![city-swirlMultithreading.jpg](StarterCode/assets/swirl/city/city-swirlMultithreading.jpg)
 3. Thread-Pool
    1. Executor
-   ![city-swirlThreadPool.jpg](StarterCode/assets/swirl/city/city-swirlThreadPool.jpg)
    2. Fork Join Pool
-   ![city-swirlForkJoinPool.jpg](StarterCode/assets/swirl/city/city-swirlForkJoinPool.jpg)
    3. Completable Futures
 
 #### Grayscale
@@ -224,7 +221,6 @@
       ![city-swirlForkJoinPool.jpg](StarterCode/assets/swirl/city/city-swirlForkJoinPool.jpg)
    3. Completable Futures
       ![city-swirlCompletableFutures.jpg](StarterCode/assets/swirl/city/city-swirlCompletableFutures.jpg)
-
 #### Glass
 
 1. Sequential

@@ -49,7 +49,7 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException, ExecutionException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 7;
+        final int numThreads = 6;
         final int matrixSizeForBlur = 3;
 
         switch (filter) {
@@ -340,7 +340,7 @@ public class ApplyFilters {
             case "29":
                 long startTime29 = System.currentTimeMillis();
 
-                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", matrixSizeForBlur, numThreads);
 
                 long endTime29 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime29 - startTime29) + " milliseconds");
@@ -350,7 +350,7 @@ public class ApplyFilters {
             case "30":
                 long startTime30 = System.currentTimeMillis();
 
-                filters.ConditionalBlurFilterCompletableFuture("conditionalBlurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+                filters.ConditionalBlurFilterCompletableFuture("conditionalBlurCompletableFutures.jpg", matrixSizeForBlur, numThreads);
 
                 long endTime30 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime30 - startTime30) + " milliseconds");
@@ -380,6 +380,11 @@ public class ApplyFilters {
                 break;
             case "4":
                 break;
+            case "5":
+                BlurTestsReport blurTestsReport = new BlurTestsReport();
+                blurTestsReport.runTests(filePath);
+                break;
+
             default:
                 System.out.println("Invalid filter");
         }
@@ -399,19 +404,19 @@ public class ApplyFilters {
 
         switch (filePath) {
             case "1":
-                filePath = "./StarterCode/city.jpg";
+                filePath = "city.jpg";
                 break;
             case "2":
-                filePath = "./StarterCode/tree.jpg";
+                filePath = "tree.jpg";
                 break;
             case "3":
-                filePath = "./StarterCode/turtle.jpg";
+                filePath = "turtle.jpg";
                 break;
             case "4":
-                filePath = "./StarterCode/monkey.jpg";
+                filePath = "monkey.jpg";
                 break;
             case "5":
-                filePath = "./StarterCode/eye.jpg";
+                filePath = "eye.jpg";
                 break;
             default:
                 System.out.println("Invalid image");

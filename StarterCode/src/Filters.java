@@ -494,7 +494,7 @@ public class Filters {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
         int width = image[0].length;
-        int numTasks = ((height * width) / numThreads) < 10000 ? numThreads : numThreads * 2;
+        int numTasks = numThreads;//((height * width) / numThreads) < 10000 ? numThreads : numThreads * 2;
         int chunkHeight = (height + numTasks - 1) / numTasks;
 
         for (int i = 0; i < numTasks; i++) {
@@ -642,7 +642,8 @@ public class Filters {
     public void BlurFilterCompletableFuture(String outputFile, int matrixSize, int numThreads) throws InterruptedException, ExecutionException {
         int width = image.length;
         int height = image[0].length;
-        int chunkWidth = width / numThreads;
+        int chunkWidth = (width + numThreads - 1) / numThreads;
+        //int chunkWidth = width +numThreads/ numThreads;
         Color[][] tmp = new Color[width][height];
         CompletableFuture[] futures = new CompletableFuture[numThreads];
 

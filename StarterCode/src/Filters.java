@@ -736,28 +736,31 @@ public class Filters {
 
         Color[][] filteredImage = new Color[height][width];
 
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        CompletableFuture<Void>[] futures = new CompletableFuture[numThreads];
 
-        CompletableFuture<Void>[] futures = new CompletableFuture[height];
+        int chunkHeight = height / numThreads;
 
-        for (int y = 0; y < height; y++) {
-            int currentY = y;
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                for (int x = 0; x < width; x++) {
-                    double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(currentY - y0, 2));
-                    double angle = maxAngle * d;
+        for (int i = 0; i < numThreads; i++) {
+            final int threadIndex = i;
+            futures[i] = CompletableFuture.runAsync(() -> {
+                int startY = threadIndex * chunkHeight;
+                int endY = (threadIndex == numThreads - 1) ? height : startY + chunkHeight;
 
-                    int xNew = (int) ((x - x0) * Math.cos(angle) - (currentY - y0) * Math.sin(angle) + x0);
-                    int yNew = (int) ((x - x0) * Math.sin(angle) + (currentY - y0) * Math.cos(angle) + y0);
+                for (int y = startY; y < endY; y++) {
+                    for (int x = 0; x < width; x++) {
+                        double d = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2));
+                        double angle = maxAngle * d;
 
-                    xNew = Math.max(0, Math.min(width - 1, xNew));
-                    yNew = Math.max(0, Math.min(height - 1, yNew));
+                        int xNew = (int) ((x - x0) * Math.cos(angle) - (y - y0) * Math.sin(angle) + x0);
+                        int yNew = (int) ((x - x0) * Math.sin(angle) + (y - y0) * Math.cos(angle) + y0);
 
-                    filteredImage[currentY][x] = image[yNew][xNew];
+                        xNew = Math.max(0, Math.min(width - 1, xNew));
+                        yNew = Math.max(0, Math.min(height - 1, yNew));
+
+                        filteredImage[y][x] = image[yNew][xNew];
+                    }
                 }
-            }, executor);
-
-            futures[y] = future;
+            });
         }
 
         CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(futures);
@@ -767,8 +770,6 @@ public class Filters {
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Erro ao aguardar a conclusão das tarefas: " + e.getMessage());
         }
-
-        executor.shutdown();
 
         Utils.writeImage(filteredImage, outputFile);
     }

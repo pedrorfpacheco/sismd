@@ -24,10 +24,17 @@
       
    
    2. Fork Join Pool
-      
+      Esse algoritimo executa de maneira recursiva. 
+      É criado um ForkJoinPool com um número específico de threads para processar a imagem de forma paralela. 
+      O método invoke é utilizado para executar uma tarefa ForkJoinPool que processa o filtro de brilho em toda a imagem.
+      A classe BrightnessFilterForkJoinPoolTask implementa a interface RecursiveAction e é responsável por realizar o processamento do filtro de brilho em uma parte da imagem. 
+      Ela divide o trabalho em duas tarefas menores até que esse tamanho seja uma linha da imagem. 
    
    3. Completable Futures
-      
+      Nessa solução o trabalho é dividido em seções (chunks) verticais, cada uma atribuída a uma thread separada. 
+      Cada thread processa suas seções de forma independente, aplicando o filtro de brilho aos pixels da imagem. 
+      O uso de CompletableFuture permite que as tarefas sejam executadas em paralelo, melhorando o desempenho do processo.
+      O método `allOfFuture.get()` é chamado para aguardar o fim da execução de todas as threads.
 
 #### Grayscale
 
@@ -70,12 +77,41 @@
 
 #### Swirl
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+1. **Sequential**</br>
+   O código começa determinando as dimensões da imagem, ou seja, sua altura e largura. 
+   Em seguida, são calculadas as coordenadas do centro da imagem, que serão usadas como base para o filtro swirl. 
+   Além disso, é definido o ângulo máximo de rotação, representado por "maxAngle" que será aplicado com base na distância do pixel ao centro da imagem.
+   
+   Em seguida, é criada uma matriz para armazenar a imagem filtrada, com as mesmas dimensões da imagem original.
+   
+   O código itera sobre cada pixel da imagem. Para cada pixel, calcula-se a distância entre o pixel e o centro da imagem usando a fórmula da distância. 
+   Com base nessa distância, calcula-se o ângulo de rotação multiplicando a distância pelo ângulo máximo
+   
+   Usando o ângulo calculado, são calculadas as novas coordenadas do pixel após a aplicação do filtro swirl. 
+   Isso é feito usando as fórmulas de transformação mencionadas na documentaçaão do projeto.
+
+3. **Multithreaded**</br>
+   O código cria várias threads para processar a imagem em paralelo. 
+   Cada thread é responsável por uma parte da imagem, dividida igualmente com base no número de threads especificado.
+   Caso nao seja possível dividir igualitariamente, a última thread assume a porção excedente da imagem.
+   Para cada parte da imagem atribuída a uma thread, o código itera sobre cada pixel e aplica a transformação descrita anteriormente.
+3. **Thread-Pool**
+   1. **Executor**</br>
+      Muito semelhante aos anteriores onde cada thread é responsável por uma parte específica da imagem, e o filtro de distorção é aplicado. 
+      O que diferencia essa implementaçao é que o código utiliza um ExecutorService para gerenciar o pool de threads e aguarda a conclusão do processamento antes de continuar.
+      Nesse caso, nao sendo necessário criar e dar start nas threads e nem fazer o join do trabalho.
+   2. **Fork Join Pool**</br>
+      Nesse caso, tambeém existe divisao das tarefas.
+      Cada thread é responsável por processar uma parte específica da imagem.
+      A classe `SwirlFilterForkJoinPoolTask` representa uma tarefa recursiva que aplica o filtro de distorção a uma parte da imagem.
+      Essa parte foi definica como sendo a linha de pixeis da imagem. 
+      Enquanto for possível dividir a imagem, novos empilhamentos de execução são criados e invocados recursivamente.
+   3. **Completable Futures** </br>
+      Esse algoritimo por sua vez executa de forma assíncrona usando CompletableFuture. 
+      Ele começa definindo as dimensões da imagem e os parâmetros do filtro como todos os outros. 
+      Para cada parte da imagem atribuída a uma tarefa, é criado um CompletableFuture que executa de maneira assíncrona para processar cada pixel (a mesma divisão aqui foi explicada no tópico de Miltithreads).
+      Após a criação de todas as tarefas, a conclusão de todas elas é esperada atraveés do método allOf(). 
+      Uma vez que todas as tarefas estejam concluídas, a imagem filtrada é escrita em um arquivo.
 
 #### Glass
 
@@ -113,7 +149,7 @@
       Cria um ExecutorService com um número fixo de threads igual ao número de núcleos de CPU disponíveis.  
       Divide a imagem em várias seções, cada uma processada por uma tarefa separada. Cada tarefa foi responsável por aplicar o filtro de vidro a uma seção específica da imagem.  
       Submete todas as tarefas ao ExecutorService. Cada tarefa foi executada por uma thread do pool de threads.  
-      Usa o método allOf do CompletableFuture para criar um CompletableFuture que é concluído quando todas as tarefas são concluídas. Em seguida, você chamou o método join para bloquear até que todas as tarefas tenham concluído a execução.  
+      Usa o método allOf do CompletableFuture para criar um CompletableFuture que é concluído quando todas as tarefas são concluídas. Em seguida, o método join é chamado para bloquear até que todas as tarefas tenham concluído a execução.  
       Por fim, escreve a imagem processada em um arquivo.
 
 #### Blur
@@ -181,13 +217,14 @@
 
 #### Swirl
 
+![city-swirl.jpg](StarterCode/assets/swirl/city-swirl.jpg)
 1. Sequential
 2. Multithreaded
 3. Thread-Pool
    1. Executor
    2. Fork Join Pool
    3. Completable Futures
-
+   
 #### Glass
 
 1. Sequential

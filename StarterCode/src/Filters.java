@@ -659,26 +659,22 @@ public class Filters {
     }
 
     public void GrayFilterCompletableFuture(String outputFile, int numThreads) throws InterruptedException, ExecutionException {
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        int height = image.length;
-        int chunkHeight = (height + numThreads - 1) / numThreads;
-        List<Future<CompletableFuture<Color[][]>>> futures = new ArrayList<>();
+        int width = image.length;
+        int height = image[0].length;
+        int chunkWidth = (width + numThreads - 1) / numThreads;
+        //int chunkWidth = width +numThreads/ numThreads;
+        Color[][] tmp = new Color[width][height];
+        CompletableFuture[] futures = new CompletableFuture[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
-            int startRow = i * chunkHeight;
-            int endRow = Math.min(startRow + chunkHeight, height);
-            futures.add(executor.submit(new GrayCompletableFuturesTask(image, startRow, endRow)));
+            int startColumn = i * chunkWidth;
+            int endColumn = Math.min(startColumn + chunkWidth, width);
+            futures[i] = CompletableFuture.runAsync(new GrayCompletableFuturesTask(image, startColumn, endColumn));
         }
 
-        Color[][] grayImage = new Color[image.length][image[0].length];
-        for (Future<CompletableFuture<Color[][]>> future : futures) {
-            CompletableFuture<Color[][]> completableFuture = future.get();
-            Color[][] partialGrayImage = completableFuture.get();
-            System.arraycopy(partialGrayImage, 0, grayImage, partialGrayImage.length * futures.indexOf(future), partialGrayImage.length);
-        }
+        CompletableFuture.allOf(futures).join();
 
-        executor.shutdown();
-        Utils.writeImage(grayImage, outputFile);
+        Utils.writeImage(image, outputFile);
     }
 
     public void GlassFilterCompletableFuture(String outputFile, int numThreads) throws InterruptedException, ExecutionException {

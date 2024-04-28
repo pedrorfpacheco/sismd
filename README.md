@@ -24,10 +24,17 @@
       
    
    2. Fork Join Pool
-      
+      Esse algoritimo executa de maneira recursiva. 
+      É criado um ForkJoinPool com um número específico de threads para processar a imagem de forma paralela. 
+      O método invoke é utilizado para executar uma tarefa ForkJoinPool que processa o filtro de brilho em toda a imagem.
+      A classe BrightnessFilterForkJoinPoolTask implementa a interface RecursiveAction e é responsável por realizar o processamento do filtro de brilho em uma parte da imagem. 
+      Ela divide o trabalho em duas tarefas menores até que esse tamanho seja uma linha da imagem. 
    
    3. Completable Futures
-      
+      Nessa solução o trabalho é dividido em seções (chunks) verticais, cada uma atribuída a uma thread separada. 
+      Cada thread processa suas seções de forma independente, aplicando o filtro de brilho aos pixels da imagem. 
+      O uso de CompletableFuture permite que as tarefas sejam executadas em paralelo, melhorando o desempenho do processo.
+      O método `allOfFuture.get()` é chamado para aguardar o fim da execução de todas as threads.
 
 #### Grayscale
 
@@ -142,7 +149,7 @@
       Cria um ExecutorService com um número fixo de threads igual ao número de núcleos de CPU disponíveis.  
       Divide a imagem em várias seções, cada uma processada por uma tarefa separada. Cada tarefa foi responsável por aplicar o filtro de vidro a uma seção específica da imagem.  
       Submete todas as tarefas ao ExecutorService. Cada tarefa foi executada por uma thread do pool de threads.  
-      Usa o método allOf do CompletableFuture para criar um CompletableFuture que é concluído quando todas as tarefas são concluídas. Em seguida, você chamou o método join para bloquear até que todas as tarefas tenham concluído a execução.  
+      Usa o método allOf do CompletableFuture para criar um CompletableFuture que é concluído quando todas as tarefas são concluídas. Em seguida, o método join é chamado para bloquear até que todas as tarefas tenham concluído a execução.  
       Por fim, escreve a imagem processada em um arquivo.
 
 #### Blur
@@ -209,15 +216,21 @@
    3. **Completable Futures** - 
 
 #### Swirl
+<img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="200"/></br>
+1. **Sequential**
 
-![city-swirl.jpg](StarterCode/assets/swirl/city-swirl.jpg)
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-   
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 2269        | 2278        | 2328        | 2291              |
+| Tree       | 215         | 211         | 211         | 212               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![city-metrics.png](StarterCode/assets/swirl/city-metrics.png)
+![city-chart.png](StarterCode/assets/swirl/city-chart.png)
+
 #### Glass
 
 1. Sequential
@@ -266,13 +279,20 @@
    3. Completable Futures
 
 #### Swirl
+<img src="./StarterCode/assets/swirl/tree-swirl.jpg" alt="drawing" width="200"/></br>
+1. **Sequential**
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 215         | 211         | 211         | 212               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![tree-metrics.png](StarterCode/assets/swirl/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/swirl/tree-chart.png)
+
 
 #### Glass
 
@@ -322,13 +342,20 @@
    3. Completable Futures
 
 #### Swirl
+<img src="./StarterCode/assets/swirl/turtle-swirl.png" alt="drawing" width="200"/></br>
+1. **Sequential**
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle     | 77          | 77          | 91          | 245               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![turtle-metrics.png](StarterCode/assets/swirl/turtle-metrics.png)
+![turtle-chart.png](StarterCode/assets/swirl/turtle-chart.png)
 
 #### Glass
 

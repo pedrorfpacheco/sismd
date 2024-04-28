@@ -4,8 +4,29 @@ import java.util.concurrent.ExecutionException;
 
 public class ApplyFilters {
 
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+    private static final Scanner input = new Scanner(System.in);
 
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        System.out.println("Welcome to the Image Filter Application!");
+        System.out.println("Choose your option:\n");
+        System.out.println("1. Apply a filter to an image");
+        System.out.println("2. Run tests for the filters");
+        String option = input.nextLine();
+
+        switch (option) {
+            case "1":
+                menu();
+                break;
+            case "2":
+                runTests();
+                break;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
+    }
+
+    public static void menu() throws IOException, ExecutionException, InterruptedException {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert the name of the file path you would like to use.");
         String filePath = input.nextLine();
@@ -30,12 +51,13 @@ public class ApplyFilters {
         Filters filters = new Filters(filePath);
         final int numThreads = 7;
         final int matrixSizeForBlur = 3;
+        final int brighterIntensity = 128;
 
         switch (filter) {
             case "1":
                 long startTime1 = System.currentTimeMillis();
 
-                filters.BrighterFilter("brighter.jpg", 128);
+                filters.BrighterFilter("brighter.jpg", brighterIntensity);
 
                 long endTime1 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime1 - startTime1) + " milliseconds");
@@ -94,7 +116,7 @@ public class ApplyFilters {
             case "7":
                 long startTime7 = System.currentTimeMillis();
 
-                filters.BrighterFilterMultiThread("brighterMultiThread.jpg", 128, numThreads);
+                filters.BrighterFilterMultiThread("brighterMultiThread.jpg", brighterIntensity, numThreads);
 
                 long endTime7 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime7 - startTime7) + " milliseconds");
@@ -115,7 +137,7 @@ public class ApplyFilters {
                 long startTime9 = System.currentTimeMillis();
                 int threads = Runtime.getRuntime().availableProcessors();
 
-                filters.SwirlFilterMultiThread("swirlMultithreading.jpg", threads);
+                filters.SwirlFilterMultiThread("swirlMultithreading.jpg", numThreads);
 
                 long endTime9 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime9 - startTime9) + " milliseconds");
@@ -155,8 +177,7 @@ public class ApplyFilters {
             case "13":
                 long startTime13 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", 128, threads);
+                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", brighterIntensity, numThreads);
 
                 long endTime13 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime13 - startTime13) + " milliseconds");
@@ -176,8 +197,7 @@ public class ApplyFilters {
             case "15":
                 long startTime15 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.SwirlFilterThreadPool("swirlThreadPool.jpg", threads);
+                filters.SwirlFilterThreadPool("swirlThreadPool.jpg", numThreads);
 
                 long endTime15 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime15 - startTime15) + " milliseconds");
@@ -217,8 +237,7 @@ public class ApplyFilters {
             case "19":
                 long startTime19 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.BrighterFilterForkJoinPool("brighterForkJoinPool.jpg", threads, 128);
+                filters.BrighterFilterForkJoinPool("brighterForkJoinPool.jpg", numThreads, brighterIntensity);
 
                 long endTime19 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime19 - startTime19) + " milliseconds");
@@ -238,8 +257,7 @@ public class ApplyFilters {
             case "21":
                 long startTime21 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.SwirlFilterForkJoinPool("swirlForkJoinPool.jpg", threads);
+                filters.SwirlFilterForkJoinPool("swirlForkJoinPool.jpg", numThreads);
 
                 long endTime21 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime21 - startTime21) + " milliseconds");
@@ -279,7 +297,7 @@ public class ApplyFilters {
             case "25":
                 long startTime25 = System.currentTimeMillis();
 
-                filters.BrighterFilterCompletableFuture("brighterCompletableFutures.jpg", numThreads, 128);
+                filters.BrighterFilterCompletableFuture("brighterCompletableFutures.jpg", numThreads, brighterIntensity);
 
                 long endTime25 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime25 - startTime25) + " milliseconds");
@@ -319,7 +337,7 @@ public class ApplyFilters {
             case "29":
                 long startTime29 = System.currentTimeMillis();
 
-                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+                filters.BlurFilterCompletableFuture("blurCompletableFutures.jpg", matrixSizeForBlur, numThreads);
 
                 long endTime29 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime29 - startTime29) + " milliseconds");
@@ -329,7 +347,7 @@ public class ApplyFilters {
             case "30":
                 long startTime30 = System.currentTimeMillis();
 
-                filters.ConditionalBlurFilterCompletableFuture("conditionalBlurCompletableFutures.jpg", numThreads, matrixSizeForBlur);
+                filters.ConditionalBlurFilterCompletableFuture("conditionalBlurCompletableFutures.jpg", matrixSizeForBlur, numThreads);
 
                 long endTime30 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime30 - startTime30) + " milliseconds");
@@ -340,5 +358,84 @@ public class ApplyFilters {
                 System.out.println("\nInvalid filter");
                 break;
         }
+    }
+
+    private static void runTests() throws InterruptedException {
+        final String filePath = chooseImage();
+        final String filter = chooseFilter();
+
+        switch (filter) {
+            case "1":
+                BrightTestsReport brighterTestsReport = new BrightTestsReport();
+                brighterTestsReport.runTests(filePath);
+            case "2":
+                GrayTestsReport grayTestsReport = new GrayTestsReport();
+                grayTestsReport.runTests(filePath);
+            case "3":
+                SwirlTestsReport swirlTestsReport = new SwirlTestsReport();
+                swirlTestsReport.runTests(filePath);
+                break;
+            case "4":
+                break;
+            case "5":
+                BlurTestsReport blurTestsReport = new BlurTestsReport();
+                blurTestsReport.runTests(filePath);
+                break;
+
+            default:
+                System.out.println("Invalid filter");
+        }
+    }
+
+    private static String chooseImage() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("\nChoose an image to apply the filter to:");
+        System.out.println("1. city.jpg");
+        System.out.println("2. tree.jpg");
+        System.out.println("3. turtle.jpg");
+        System.out.println("4. monkey.jpg");
+        System.out.println("5. eye.jpg");
+
+        String filePath = input.nextLine();
+
+        switch (filePath) {
+            case "1":
+                filePath = "./StarterCode/city.jpg";
+                break;
+            case "2":
+                filePath = "./StarterCode/tree.jpg";
+                break;
+            case "3":
+                filePath = "./StarterCode/turtle.jpg";
+                break;
+            case "4":
+                filePath = "./StarterCode/monkey.jpg";
+                break;
+            case "5":
+                filePath = "./StarterCode/eye.jpg";
+                break;
+            default:
+                System.out.println("Invalid image");
+                return filePath;
+        }
+
+        return filePath;
+    }
+
+    private static String chooseFilter() {
+
+        System.out.println("\nChoose a filter to apply to the image:");
+        System.out.println("1. Brighter");
+        System.out.println("2. GrayScale");
+        System.out.println("3. Swirl");
+        System.out.println("4. Glass");
+        System.out.println("5. Blur");
+        System.out.println("6. Conditional Blur");
+
+        String filter = input.nextLine();
+        input.close();
+
+        return filter;
     }
 }

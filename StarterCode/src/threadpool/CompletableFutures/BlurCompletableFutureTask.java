@@ -24,9 +24,7 @@ public class BlurCompletableFutureTask implements Runnable {
     public void run() {
         for (int c = startColumn; c < endColumn; c++) {
             for (int l = 0; l < height; l++) {
-                Color pixel = image[c][l];
-                pixel = BlurPixel(image, c, l, matrixSize);
-                tmp[c][l] = pixel;
+                tmp[c][l] = BlurPixel(image, c, l, matrixSize);
             }
         }
     }

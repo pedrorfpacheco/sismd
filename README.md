@@ -508,23 +508,15 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 ### Conclusões das implementações
 
-Após a análise das diversas abordagens para a aplicação de filtros de imagens, foi possível constatar várias diferenças significativas em termos de desempenho entre os métodos sequenciais e os métodos que utilizam múltiplas threads. 
-
-Comparação entre Métodos Sequenciais e Multi-Threaded:
+​	Após a análise das diversas abordagens para a aplicação de filtros de imagens, foi possível constatar várias diferenças significativas em termos de desempenho entre os métodos sequenciais e os métodos que utilizam múltiplas threads. 
 
 ​	Ficou evidente que o processamento sequencial dos filtros de imagens é consistentemente mais lento quando comparado com as abordagens que empregam múltiplas threads ou utilizam um pool de threads. A utilização de um único fluxo de processamento não aproveita as capacidades modernas dos processadores multi-core, resultando em uma utilização subótima dos recursos disponíveis e, consequentemente, em um tempo de execução prolongado. 
 
-Desempenho entre Implementações de Threads:
+​	Dentro das implementações que utilizam threads, o esperado seria que o método multi-threaded tradicional, embora mais rápido do que o processamento sequencial, apresentasse uma queda de desempenho em comparação com os métodos baseados em thread-pool. Isto deveria ser atingido devido à melhor gestão de recursos e à eficiência na distribuição de tarefas que os pools de threads oferecem, minimizando o tempo ocioso das threads e otimizando a carga de trabalho distribuída, como observamos no filtro glass em qualquer imagem. Apesar disso, não se verificou em todos os filtros.
 
-Dentro das implementações que utilizam threads, observou-se que o método multi-threaded tradicional, embora mais rápido do que o processamento sequencial, tende a apresentar uma queda de desempenho em comparação com os métodos baseados em thread-pool. Isto pode ser atribuído à melhor gestão de recursos e à eficiência na distribuição de tarefas que os pools de threads oferecem, minimizando o tempo ocioso das threads e otimizando a carga de trabalho distribuída. 
+​	A quantidade de threads utilizada tem um impacto direto na performance, especialmente em relação à arquitetura do processador em uso. Esperava verificar que os desempenhos mais elevados seriam alcançados quando o número de threads utilizadas aproxima-se do número de núcleos do processador (n ou n+1 ou n+2). Isso deve-se ao fato de que cada thread pode ser executada simultaneamente em seu próprio núcleo, maximizando assim a utilização do processador sem causar sobrecarga significativa devido ao contexto de troca ou à competição por recursos. Apesar de tudo, verificou-se um pico de melhoria de desempenho de 2 para 3 threads, mas daí em diante os tempos poderiam manter-se os mesmos por maior parte dos filtros.
 
-Influência do Processador nas Implementações com Threads: 
-
-A quantidade de threads utilizada tem um impacto direto na performance, especialmente em relação à arquitetura do processador em uso. Verificou-se que os desempenhos mais elevados são alcançados quando o número de threads utilizadas aproxima-se do número de núcleos do processador. Isso deve-se ao fato de que cada thread pode ser executada simultaneamente em seu próprio núcleo, maximizando assim a utilização do processador sem causar sobrecarga significativa devido ao contexto de troca ou à competição por recursos.
-
- Implicações: 
-
-Esses resultados reforçam a importância de considerar a arquitetura do hardware ao desenvolver ou otimizar aplicações para processamento de imagens. A escolha entre sequencial e paralelo, e entre diferentes formas de paralelismo, deve ser informada não apenas pelas características intrínsecas do algoritmo, mas também pelo ambiente de hardware em que a aplicação será executada. Além disso, para obter o máximo desempenho, os desenvolvedores devem aspirar a alinhar o número de threads com o número de núcleos disponíveis no processador, ajustando conforme necessário para evitar tanto a subutilização quanto a sobrecarga do sistema.
+​	Esses resultados reforçam a importância de considerar a arquitetura do hardware ao desenvolver ou otimizar aplicações para processamento de imagens. A escolha entre sequencial e paralelo, e entre diferentes formas de paralelismo, deve ser informada não apenas pelas características intrínsecas do algoritmo, mas também pelo ambiente de hardware em que a aplicação será executada. Além disso, para obter o máximo desempenho, os desenvolvedores devem aspirar a alinhar o número de threads com o número de núcleos disponíveis no processador, ajustando conforme necessário para evitar tanto a subutilização quanto a sobrecarga do sistema.
 
 ## Garbage Collector
 

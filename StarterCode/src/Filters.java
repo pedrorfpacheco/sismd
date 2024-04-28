@@ -1,20 +1,16 @@
-import threadpool.CompletableFutures.*;
-import threadpool.Executor.*;
-import threadpool.ForkJoinPool.BlurFilterForkJoinPoolTask;
-import threadpool.ForkJoinPool.BrightnessFilterForkJoinPoolTask;
-import threadpool.ForkJoinPool.ConditionalBlurForkJoinPoolTask;
-import threadpool.ForkJoinPool.GlassFilterForkJoinPoolTask;
-import threadpool.ForkJoinPool.GrayFilterForkJoinPoolTask;
+import threadpool.CompletableFutures.BlurCompletableFutureTask;
+import threadpool.CompletableFutures.ConditionalBlurCompletableFutureTask;
+import threadpool.CompletableFutures.GlassCompletableFuturesTask;
+import threadpool.CompletableFutures.GrayCompletableFuturesTask;
+import threadpool.Executor.BlurFilterTask;
+import threadpool.Executor.ConditionalBlurTask;
+import threadpool.Executor.GlassFilterTask;
+import threadpool.Executor.GrayFilterTask;
+import threadpool.ForkJoinPool.*;
 import threads.*;
-import threadpool.ForkJoinPool.SwirlFilterForkJoinPoolTask;
-import threads.BlurFilterThread;
-import threads.ConditionalBlurThread;
-import threads.GlassFilterThread;
-import threads.GrayFilterThread;
 import utils.Utils;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +77,7 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public void BlurFilter(String outputFile,int matrixSize) {
+    public void BlurFilter(String outputFile, int matrixSize) {
         Color[][] blurredImage = new Color[image.length][image[0].length];
         int height = image.length;
         int width = image[0].length;
@@ -225,7 +221,7 @@ public class Filters {
 
     // ##### MultiThread #####
 
-    public void BlurFilterMultiThread(String outputFile,int matrixSize, int threadCount) throws InterruptedException{
+    public void BlurFilterMultiThread(String outputFile, int matrixSize, int threadCount) throws InterruptedException {
         Color[][] blurredImage = new Color[image.length][image[0].length];
         Thread[] threads = new Thread[threadCount];
         int height = image.length;
@@ -307,7 +303,7 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public void SwirlFilterMultiThread(String outputFile, int numThreads) throws InterruptedException{
+    public void SwirlFilterMultiThread(String outputFile, int numThreads) throws InterruptedException {
         int height = image.length;
         int width = image[0].length;
         int x0 = width / 2;
@@ -374,7 +370,7 @@ public class Filters {
 
     // ##### Thread pool #####
 
-    public void BrighterFilterThreadPool(String outputFile, int brightnessValue, int numThreads) throws InterruptedException{
+    public void BrighterFilterThreadPool(String outputFile, int brightnessValue, int numThreads) throws InterruptedException {
         int height = image.length;
         int width = image[0].length;
 
@@ -493,12 +489,12 @@ public class Filters {
         Utils.writeImage(tmp, outputFile);
     }
 
-    public void BlurFilterThreadPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException{
+    public void BlurFilterThreadPool(String outputFile, int matrixSize, int numThreads) throws InterruptedException {
         Color[][] blurredImage = new Color[image.length][image[0].length];
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         int height = image.length;
         int width = image[0].length;
-        int numTasks = ((height*width)/numThreads)<10000 ? numThreads : numThreads*2;
+        int numTasks = ((height * width) / numThreads) < 10000 ? numThreads : numThreads * 2;
         int chunkHeight = (height + numTasks - 1) / numTasks;
 
         for (int i = 0; i < numTasks; i++) {
@@ -563,20 +559,20 @@ public class Filters {
 
     // ##### Fork join #####
 
-    public void BlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) throws InterruptedException{
+    public void BlurFilterForkJoinPool(String outputFile, int numThreads, int matrixSize) throws InterruptedException {
         int width = image.length;
         int height = image[0].length;
         Color[][] blurredImage = new Color[width][height];
         ForkJoinPool pool = new ForkJoinPool(numThreads);
 
-        BlurFilterForkJoinPoolTask task = new BlurFilterForkJoinPoolTask(image, blurredImage,0,0, width, height, matrixSize);
+        BlurFilterForkJoinPoolTask task = new BlurFilterForkJoinPoolTask(image, blurredImage, 0, 0, width, height, matrixSize);
 
         pool.invoke(task);
 
         Utils.writeImage(blurredImage, outputFile);
     }
 
-    public void ConditionalBlurFilterForkJoinPool(String outputFile,  int numThreads, int matrixSize) {
+    public void ConditionalBlurFilterForkJoinPool(String outputFile, int numThreads, int matrixSize) {
         int width = image.length;
         int height = image[0].length;
         Color[][] tmp = new Color[width][height];
@@ -816,8 +812,6 @@ public class Filters {
 
         Utils.writeImage(filteredImage, outputFile);
     }
-
-
 
 
 }

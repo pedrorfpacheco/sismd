@@ -4,8 +4,29 @@ import java.util.concurrent.ExecutionException;
 
 public class ApplyFilters {
 
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+    private static final Scanner input = new Scanner(System.in);
 
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        System.out.println("Welcome to the Image Filter Application!");
+        System.out.println("Choose your option:\n");
+        System.out.println("1. Apply a filter to an image");
+        System.out.println("2. Run tests for the filters");
+        String option = input.nextLine();
+
+        switch (option) {
+            case "1":
+                menu();
+                break;
+            case "2":
+                runTests();
+                break;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
+    }
+
+    public static void menu() throws IOException, ExecutionException, InterruptedException {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert the name of the file path you would like to use.");
         String filePath = input.nextLine();
@@ -340,5 +361,67 @@ public class ApplyFilters {
                 System.out.println("\nInvalid filter");
                 break;
         }
+    }
+
+    private static void runTests() throws InterruptedException {
+        final String filePath = chooseImage();
+        final String filter = chooseFilter();
+
+        switch (filter) {
+            case "2":
+                GrayTestsReport grayTestsReport = new GrayTestsReport();
+                grayTestsReport.runTests(filePath);
+                break;
+            case "4":
+                GlassTestsReport glassTestsReport = new GlassTestsReport();
+                glassTestsReport.runTests(filePath);
+                break;
+            default:
+                System.out.println("Invalid filter");
+        }
+    }
+
+    private static String chooseImage() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("\nChoose an image to apply the filter to:");
+        System.out.println("1. city.jpg");
+        System.out.println("2. tree.jpg");
+        System.out.println("3. turtle.jpg");
+
+        String filePath = input.nextLine();
+
+        switch (filePath) {
+            case "1":
+                filePath = "city.jpg";
+                break;
+            case "2":
+                filePath = "tree.jpg";
+                break;
+            case "3":
+                filePath = "turtle.jpg";
+                break;
+            default:
+                System.out.println("Invalid image");
+                return filePath;
+        }
+
+        return filePath;
+    }
+
+    private static String chooseFilter() {
+
+        System.out.println("\nChoose a filter to apply to the image:");
+        System.out.println("1. Brighter");
+        System.out.println("2. GrayScale");
+        System.out.println("3. Swirl");
+        System.out.println("4. Glass");
+        System.out.println("5. Blur");
+        System.out.println("6. Conditional Blur");
+
+        String filter = input.nextLine();
+        input.close();
+
+        return filter;
     }
 }

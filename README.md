@@ -210,17 +210,14 @@
 
 #### Swirl
 
+![city-swirl.jpg](StarterCode/assets/swirl/city-swirl.jpg)
 1. Sequential
-![city-swirl.jpg](StarterCode/assets/swirl/city/city-swirl.jpg)
 2. Multithreaded
-![city-swirlMultithreading.jpg](StarterCode/assets/swirl/city/city-swirlMultithreading.jpg)
 3. Thread-Pool
    1. Executor
-      ![city-swirlThreadPool.jpg](StarterCode/assets/swirl/city/city-swirlThreadPool.jpg)
    2. Fork Join Pool
-      ![city-swirlForkJoinPool.jpg](StarterCode/assets/swirl/city/city-swirlForkJoinPool.jpg)
    3. Completable Futures
-      ![city-swirlCompletableFutures.jpg](StarterCode/assets/swirl/city/city-swirlCompletableFutures.jpg)
+   
 #### Glass
 
 1. Sequential

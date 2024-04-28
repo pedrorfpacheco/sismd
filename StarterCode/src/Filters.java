@@ -466,7 +466,7 @@ public class Filters {
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        Utils.writeImage(image, outputFile);
+        Utils.writeImage(glassImage, outputFile);
     }
 
     public void ConditionalBlurFilterThreadPool(String outputFile, int numThreads, int matrixSize) throws InterruptedException {

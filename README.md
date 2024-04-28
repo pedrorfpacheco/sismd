@@ -210,6 +210,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/city.jpg)
+
+
 1. **Sequencial** -
 
    | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -240,6 +243,8 @@ Todos os tempos são resultantes de uma média de três execuções.
 ![city-chart.png](StarterCode/assets/swirl/city-chart.png)
 
 #### Glass
+
+![turtle-metrics.png](StarterCode/assets/glass/city.jpg)
 
 1. **Sequencial** - 
 
@@ -299,6 +304,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/tree.jpg)
+
+
 1. **Sequencial** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -330,7 +338,15 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
+![turtle-metrics.png](StarterCode/assets/glass/tree.jpg)
+
 1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 260         | 236         | 250         | 248,66            |
+
+
 2. **Multithreaded and Thread-Pool** -
 
 Todos os tempos são resultantes de uma média de três execuções.
@@ -384,6 +400,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
+![turtle-metrics.png](StarterCode/assets/gray/turtle.jpg)
+
+
 1. **Sequential** - 
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -414,6 +433,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 ![turtle-chart.png](StarterCode/assets/swirl/turtle-chart.png)
 
 #### Glass
+
+![turtle-metrics.png](StarterCode/assets/glass/turtle.jpg)
+
 
 1. **Sequencial** - 
 

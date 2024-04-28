@@ -368,9 +368,11 @@ public class ApplyFilters {
             case "1":
                 BrightTestsReport brighterTestsReport = new BrightTestsReport();
                 brighterTestsReport.runTests(filePath);
+                break;
             case "2":
                 GrayTestsReport grayTestsReport = new GrayTestsReport();
                 grayTestsReport.runTests(filePath);
+                break;
             case "3":
                 SwirlTestsReport swirlTestsReport = new SwirlTestsReport();
                 swirlTestsReport.runTests(filePath);

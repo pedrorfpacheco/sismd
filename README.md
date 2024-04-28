@@ -21,16 +21,14 @@
       O método BrighterFilterThreadPool aplica um filtro para aumentar o brilho de uma imagem usando uma pool de threads para processamento paralelo, o que melhora a eficiência, especialmente em imagens grandes. Este método divide a imagem em faixas horizontais, onde cada thread em um pool fixo processa uma faixa, aumentando o brilho de cada pixel na faixa designada.
    
       A divisão é feita de modo que todas as threads tenham aproximadamente a mesma quantidade de trabalho, distribuindo as linhas restantes pelas primeiras threads caso a divisão não seja exata. Após submeter todas as tarefas ao executor, o método espera que todas as threads terminem usando *awaitTermination*.
-      
-   
-   2. Fork Join Pool
+   2. **Fork Join Pool**</br>
       Esse algoritimo executa de maneira recursiva. 
       É criado um ForkJoinPool com um número específico de threads para processar a imagem de forma paralela. 
       O método invoke é utilizado para executar uma tarefa ForkJoinPool que processa o filtro de brilho em toda a imagem.
       A classe BrightnessFilterForkJoinPoolTask implementa a interface RecursiveAction e é responsável por realizar o processamento do filtro de brilho em uma parte da imagem. 
       Ela divide o trabalho em duas tarefas menores até que esse tamanho seja uma linha da imagem. 
    
-   3. Completable Futures
+   3. **Completable Futures**</br>
       Nessa solução o trabalho é dividido em seções (chunks) verticais, cada uma atribuída a uma thread separada. 
       Cada thread processa suas seções de forma independente, aplicando o filtro de brilho aos pixels da imagem. 
       O uso de CompletableFuture permite que as tarefas sejam executadas em paralelo, melhorando o desempenho do processo.
@@ -199,12 +197,18 @@
 
 #### Brightness
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+<img src="./StarterCode/assets/brighter/city-brighter.png" alt="drawing" width="300"/></br>
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 1147        | 1169        | 1150        | 1155              |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![city-metrics.png](StarterCode/assets/brighter/city-metrics.png)
+![city-chart.png](StarterCode/assets/brighter/city-chart.png)
 
 #### Grayscale
 
@@ -216,13 +220,12 @@
    3. **Completable Futures** - 
 
 #### Swirl
-<img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="200"/></br>
+<img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="300"/></br>
 1. **Sequential**
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
 | City       | 2269        | 2278        | 2328        | 2291              |
-| Tree       | 215         | 211         | 211         | 212               |
 
 2. **Multithreaded and Thread-Pool**
 
@@ -261,13 +264,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 ### Tree.jpg
 
 #### Brightness
+<img src="./StarterCode/assets/brighter/tree-brighter.png" alt="drawing" width="500"/></br>
+1. **Sequential**
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|------------|-------------|-------------|-------------------|
+| Tree       | 187        | 193         | 190         | 190               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![tree-metrics.png](StarterCode/assets/brighter/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/brighter/tree-chart.png)
 
 #### Grayscale
 
@@ -279,7 +287,7 @@ Todos os tempos são resultantes de uma média de três execuções.
    3. Completable Futures
 
 #### Swirl
-<img src="./StarterCode/assets/swirl/tree-swirl.jpg" alt="drawing" width="200"/></br>
+<img src="./StarterCode/assets/swirl/tree-swirl.jpg" alt="drawing" width="500"/></br>
 1. **Sequential**
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
@@ -325,12 +333,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Brightness
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+<img src="./StarterCode/assets/brighter/turtle-brighter.png" alt="drawing" width="500"/></br>
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle     | 50           | 51           | 51          | 50                 |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![turtle-metrics.png](StarterCode/assets/brighter/turtle-metrics.png)
+![turtle-chart.png](StarterCode/assets/brighter/turtle-chart.png)
 
 #### Grayscale
 
@@ -342,7 +356,7 @@ Todos os tempos são resultantes de uma média de três execuções.
    3. Completable Futures
 
 #### Swirl
-<img src="./StarterCode/assets/swirl/turtle-swirl.png" alt="drawing" width="200"/></br>
+<img src="./StarterCode/assets/swirl/turtle-swirl.png" alt="drawing" width="500"/></br>
 1. **Sequential**
 
 

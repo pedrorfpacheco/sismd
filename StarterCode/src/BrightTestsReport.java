@@ -14,44 +14,46 @@ public class BrightTestsReport {
 
         IntStream.rangeClosed(2, 16).forEach(numThreads -> {
             try {
-                List<Long> executionTimesMultiThread = new ArrayList<>();
-                List<Long> executionTimesThreadPool = new ArrayList<>();
-                List<Long> executionTimesForkJoinPool = new ArrayList<>();
+//                List<Long> executionTimesMultiThread = new ArrayList<>();
+//                List<Long> executionTimesThreadPool = new ArrayList<>();
+//                List<Long> executionTimesForkJoinPool = new ArrayList<>();
                 List<Long> executionTimesCompletableFuture = new ArrayList<>();
 
                 for (int i = 0; i < 3; i++) {
                     Filters filters = new Filters(filePath);
-
                     long startTime = System.nanoTime();
-                    filters.BrighterFilterMultiThread("outputBrighterFilterMultiThread.png",128,  numThreads);
                     long endTime = System.nanoTime();
-                    executionTimesMultiThread.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
 
-                    startTime = System.nanoTime();
-                    filters.BrighterFilterThreadPool("outputBrighterFilterThreadPool.png", 128, numThreads);
-                    endTime = System.nanoTime();
-                    executionTimesThreadPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
+//                    startTime = System.nanoTime();
+//                    filters.BrighterFilterMultiThread("outputBrighterFilterMultiThread.png",128,  numThreads);
+//                    endTime = System.nanoTime();
+//                    executionTimesMultiThread.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
 
-                    startTime = System.nanoTime();
-                    filters.BrighterFilterForkJoinPool("outputBrighterFilterForkJoinPool.png",128,  numThreads);
-                    endTime = System.nanoTime();
-                    executionTimesForkJoinPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
-
+//                    startTime = System.nanoTime();
+//                    filters.BrighterFilterThreadPool("outputBrighterFilterThreadPool.png", 128, numThreads);
+//                    endTime = System.nanoTime();
+//                    executionTimesThreadPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
+//
+//                    startTime = System.nanoTime();
+//                    filters.BrighterFilterForkJoinPool("outputBrighterFilterForkJoinPool.png",128,  numThreads);
+//                    endTime = System.nanoTime();
+//                    executionTimesForkJoinPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
+//
                     startTime = System.nanoTime();
                     filters.BrighterFilterCompletableFuture("outputBrighterFilterCompletableFuture.png",128,  numThreads);
                     endTime = System.nanoTime();
                     executionTimesCompletableFuture.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
                 }
 
-                double averageExecutionTimeMultiThread = executionTimesMultiThread.stream().mapToLong(val -> val).average().orElse(0.0);
-                double averageExecutionTimeThreadPool = executionTimesThreadPool.stream().mapToLong(val -> val).average().orElse(0.0);
-                double averageExecutionTimeForkJoinPool = executionTimesForkJoinPool.stream().mapToLong(val -> val).average().orElse(0.0);
+//                double averageExecutionTimeMultiThread = executionTimesMultiThread.stream().mapToLong(val -> val).average().orElse(0.0);
+//                double averageExecutionTimeThreadPool = executionTimesThreadPool.stream().mapToLong(val -> val).average().orElse(0.0);
+//                double averageExecutionTimeForkJoinPool = executionTimesForkJoinPool.stream().mapToLong(val -> val).average().orElse(0.0);
                 double averageExecutionTimeCompletableFuture = executionTimesCompletableFuture.stream().mapToLong(val -> val).average().orElse(0.0);
 
                 System.out.println("\nAverage execution time for " + numThreads + " threads:");
-                System.out.println("MultiThread: " + averageExecutionTimeMultiThread + " ms");
-                System.out.println("ThreadPool: " + averageExecutionTimeThreadPool + " ms");
-                System.out.println("ForkJoinPool: " + averageExecutionTimeForkJoinPool + " ms");
+//                System.out.println("MultiThread: " + averageExecutionTimeMultiThread + " ms");
+//                System.out.println("ThreadPool: " + averageExecutionTimeThreadPool + " ms");
+//                System.out.println("ForkJoinPool: " + averageExecutionTimeForkJoinPool + " ms");
                 System.out.println("CompletableFuture: " + averageExecutionTimeCompletableFuture + " ms");
             } catch (Exception e) {
                 System.out.println("\nError running tests: " + e.getMessage());

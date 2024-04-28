@@ -378,6 +378,8 @@ public class ApplyFilters {
                 swirlTestsReport.runTests(filePath);
                 break;
             case "4":
+                GlassTestsReport glassTestsReport = new GlassTestsReport();
+                glassTestsReport.runTests(filePath);
                 break;
             case "5":
                 BlurTestsReport blurTestsReport = new BlurTestsReport();

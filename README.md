@@ -510,7 +510,7 @@ The following tests were conducted with the following conditions:
 | G1                 | 313         | 331         | 321         | 321.66         |
 | Z                  | 437         | 412         | 425         | 424.66         |
 
-The Shenandoah Garbage Collector was not tested as it is not supported on the used JDK distribution (Oracle).
+The Shenandoah Garbage Collector was not tested as it is not supported by the used JDK distribution (Oracle).
 
 As we can see, the G1 Garbage Collector had the best average time, closely followed by the Parallel Garbage Collector.
 This was expected, as the G1 Garbage Collector has a good balance of throughput and latency, which is adequate for this application.

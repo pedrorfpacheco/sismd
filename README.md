@@ -354,3 +354,65 @@
    3. Completable Futures
 
 ### Garbage Collector
+
+In order to improve performance, we looked into garbage collection tuning.
+We analyzed the following garbage collectors: Serial, Parallel, G1, Shenandoah and Z.
+The following criteria was used to compare the different garbage collectors:
+- Throughput: Average time spent running code vs running GC;
+- Latency: amount of time code pauses for GC to run;
+- Memory Usage: the size of the heap;
+
+For this project, we are particularly interested in throughput and latency, as image processing is a CPU-bound task, but we are also concerned with the time the user has to wait for the response with the resulting image.
+Memory, however, isn't a big concern here since this is a small application.
+
+#### Serial Garbage Collector
+
+The Serial Garbage Collector works on a single thread.
+As such it is best suited for single-processor machines.
+It has the advantage of requiring a small amount of memory.
+
+#### Parallel Garbage Collector
+
+The Parallel Garbage Collector runs on multiple threads.
+As such, it is recommended for multicore systems.
+It is designed to reduce CPU time spent on garbage collection, being ideal for applications with little user interaction.
+
+#### G1 Garbage Collector
+
+The G1 (or Garbage First) Garbage Collector also uses multiple threads, but differs from the Parallel GB in that some work is done concurrently with the application.
+The collector tries to achieve high throughput along with short pause times.
+It is particularly useful for applications that require predictable garbage collection pause times.
+
+#### Shenandoah Garbage Collector
+
+The Shenandoah Garbage Collector is a low-pause-time garbage collector, having low latency.
+It also works concurrently with the application, and attempts to avoid stop-the-world pauses.
+It tries to keep pause times constant, regardless of heap size.
+
+#### Z Garbage Collector
+
+The Z Garbage Collector is a scalable garbage collector, designed for large heaps.
+It is also low-latency, aiming not to exceed a pause time of 10ms, and works concurrently with the application.
+
+#### Results
+
+The following tests were conducted with the following conditions:
+   * processor - AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
+   * image size - 1920x1195 pixels.
+   * number of threads - 9.
+   * filter - Glass with fork join pool implementation.
+
+| Garbage Collector | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+| ------------------ | ----------- | ----------- | ----------- |-------------------|
+| Serial             |  361      |  322      |  329      | 337.33            |
+| Parallel           |  358      |  321      |  291      | 323.33            |
+| G1                 |  313      |  331      |  321      | 321.66            |
+| Z                  |  437      |  412      |  425      | 424.66            |
+
+The Shenandoah Garbage Collector was not tested as it is not supported on the used JDK distribution (Oracle).
+
+As we can see, the G1 Garbage Collector had the best average time, closely followed by the Parallel Garbage Collector.
+This was expected, as the G1 Garbage Collector has a good balance of throughput and latency, which is adequate for this application.
+
+#### Tuning
+

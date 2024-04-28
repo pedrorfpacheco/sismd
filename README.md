@@ -274,6 +274,7 @@ O processador utilizado para testar esta implementação é um 10th Generation I
 <img src="./StarterCode/assets/blur/city-output.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequential**
+
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
 | City       | 2697        | 2705        | 2750        | 2717              |
@@ -379,6 +380,7 @@ O processador utilizado para testar esta implementação é um 10th Generation I
 <img src="./StarterCode/assets/blur/tree-output.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequential**
+
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
 | Tree       | 339        | 344        | 370        | 351              |
@@ -485,6 +487,7 @@ O processador utilizado para testar esta implementação é um 10th Generation I
 <img src="./StarterCode/assets/blur/turtle-output.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequential**
+
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
 | Turtle       | 121        | 111        | 135        | 123              |

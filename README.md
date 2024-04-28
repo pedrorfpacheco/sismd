@@ -184,6 +184,7 @@
 #### Conditional Blur
 
 1. Sequential
+2. 
 2. Multithreaded
 3. Thread-Pool
    1. Executor
@@ -408,7 +409,7 @@ processor: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
-| City       | 361         | 315         | 222         | 299               |
+| Tree       | 361         | 315         | 222         | 299               |
 
 2. **Multithreaded and Thread-Pool**
 
@@ -539,7 +540,7 @@ processor: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx, 2.30 GHz.
 
 | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
 |------------|-------------|-------------|-------------|-------------------|
-| City       | 123         | 48          | 36          | 69                |
+| Turtle     | 123         | 48          | 36          | 69                |
 
 2. **Multithreaded and Thread-Pool**
 

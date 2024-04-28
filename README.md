@@ -421,6 +421,8 @@ Todos os tempos são resultantes de uma média de três execuções.
 ### Tree.jpg
 
 #### Brightness
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/brighter/tree-brighter.png" alt="drawing" width="500"/></br>
 1. **Sequential**
 

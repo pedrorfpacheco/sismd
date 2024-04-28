@@ -10,13 +10,14 @@
 #### Brightness
 
 1. **Sequential** - 
+
    O método BrighterFilter aumenta o brilho de cada pixel da imagem. Este algoritmo percorre cada pixel da imagem, aumenta os valores de vermelho (red), verde (green) e azul (blue) por um valor definido, mas sem exceder o máximo de 255 para cada cor. Se o aumento proposto para qualquer cor ultrapassar 255, essa cor é definida como 255. Depois de ajustar as cores, o pixel é atualizado na imagem temporária.
 
 2. **Multi-threaded** - 
 
    O método BrighterFilterMultiThread aplica um filtro para tornar uma imagem mais brilhante utilizando múltiplas threads para processar diferentes 	partes da imagem simultaneamente, melhorando a eficiência do processamento. A imagem é dividida horizontalmente em partes iguais, com cada 	thread responsável por aumentar o brilho de uma parte específica. As threads são iniciadas para processar suas respectivas secções e, após todas 	as threads terem concluído o processamento (usando join para sincronização).
 
-1. **Thread-Pool**
+3. **Thread-Pool**
 
    1. **Executor** - 
 
@@ -195,6 +196,8 @@
 
 #### Brightness
 
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/brighter/city-brighter.png" alt="drawing" width="300"/></br>
 1. **Sequential**
 
@@ -210,14 +213,27 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
-1. **Sequential** - 
-2. **Multithreaded** - 
-3. **Thread-Pool** - 
-   1. **Executor** - 
-   2. **Fork Join Pool** - 
-   3. **Completable Futures** - 
+![turtle-metrics.png](StarterCode/assets/gray/city.jpg)
+
+
+1. **Sequencial** -
+
+   | Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+   |------------|-------------|-------------|-------------|-------------------|
+   | City       | 1955        | 1881        | 1982        | 1939,33           |
+
+2. **Multithreaded and Thread-Pool** -
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+
+![city-metrics.png](StarterCode/assets/gray/city-metrics.png)
+![city-chart.png](StarterCode/assets/gray/city-chart.png)
 
 #### Swirl
+
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="300"/></br>
 1. **Sequential**
 
@@ -234,14 +250,28 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+![turtle-metrics.png](StarterCode/assets/glass/city.jpg)
+
+1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 1955        | 1881        | 1982        | 1939,33           |
+
+2. **Multithreaded and Thread-Pool** - 
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+
+![city-metrics.png](StarterCode/assets/glass/city-chart.png)
+![city-chart.png](StarterCode/assets/glass/city-metrics.png)
+![city-chart.png](StarterCode/assets/glass/city-chart2.png)
+
+
 
 #### Blur
+
+O processador utilizado para testar esta implementação é um 10th Generation Intel® Core™ Core i7-10750H Processor com 6 cores e 12 threads.
 
 <img src="./StarterCode/assets/blur/city-output.jpg" alt="drawing" width="300"/></br>
 
@@ -277,6 +307,9 @@ Todos os tempos são resultantes de uma média de três execuções.
 ### Tree.jpg
 
 #### Brightness
+
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/brighter/tree-brighter.png" alt="drawing" width="500"/></br>
 1. **Sequential**
 
@@ -292,14 +325,27 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+![turtle-metrics.png](StarterCode/assets/gray/tree.jpg)
+
+
+1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 185         | 184         | 223         | 197,33            |
+
+
+2. **Multithreaded and Thread-Pool** - 
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+![tree-metrics.png](StarterCode/assets/gray/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/gray/tree-chart.png)
 
 #### Swirl
+
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/swirl/tree-swirl.jpg" alt="drawing" width="500"/></br>
 1. **Sequential**
 
@@ -317,14 +363,29 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+![turtle-metrics.png](StarterCode/assets/glass/tree.jpg)
+
+1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 260         | 236         | 250         | 248,66            |
+
+
+2. **Multithreaded and Thread-Pool** -
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+
+![tree-metrics.png](StarterCode/assets/glass/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/glass/tree-chart.png)
+![tree-chart.png](StarterCode/assets/glass/tree-chart2.png)
+
+
 
 #### Blur
+
+O processador utilizado para testar esta implementação é um 10th Generation Intel® Core™ Core i7-10750H Processor com 6 cores e 12 threads.
 
 <img src="./StarterCode/assets/blur/tree-output.jpg" alt="drawing" width="300"/></br>
 
@@ -377,6 +438,8 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Brightness
 
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/brighter/turtle-brighter.png" alt="drawing" width="500"/></br>
 1. **Sequential**
 
@@ -392,14 +455,27 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+![turtle-metrics.png](StarterCode/assets/gray/turtle.jpg)
+
+
+1. **Sequential** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle     | 57          | 62           | 68          | 62,33             |
+
+
+2. **Multithreaded and Thread-Pool** - 
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+![turtle-metrics.png](StarterCode/assets/gray/turtle-metrics.png)
+![turtle-chart.png](StarterCode/assets/gray/turtle-chart.png)
 
 #### Swirl
+
+O processador utilizado para testar esta implementação é um Apple M1 Pro 10‑core.
+
 <img src="./StarterCode/assets/swirl/turtle-swirl.png" alt="drawing" width="500"/></br>
 1. **Sequential**
 
@@ -417,14 +493,30 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Glass
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+![turtle-metrics.png](StarterCode/assets/glass/turtle.jpg)
+
+
+1. **Sequencial** - 
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle     | 70          | 81          | 83           | 78                 |
+
+
+2. **Multithreaded and Thread-Pool** - 
+
+O processador utilizado para testar esta implementação é AMD Ryzen 7 5800H with Radeon Graphics com 8 cores e 16 threads.
+Todos os tempos são resultantes de uma média de três execuções.
+
+![turtle-metrics.png](StarterCode/assets/glass/turtle-metrics.png)
+![turtle-chart.png](StarterCode/assets/glass/turtle-chart.png)
+![turtle-chart.png](StarterCode/assets/glass/turtle-chart2.png)
+
+
 
 #### Blur
+
+O processador utilizado para testar esta implementação é um 10th Generation Intel® Core™ Core i7-10750H Processor com 6 cores e 12 threads.
 
 <img src="./StarterCode/assets/blur/turtle-output.jpg" alt="drawing" width="300"/></br>
 
@@ -459,7 +551,23 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 ### Conclusões das implementações
 
+Após a análise das diversas abordagens para a aplicação de filtros de imagens, foi possível constatar várias diferenças significativas em termos de desempenho entre os métodos sequenciais e os métodos que utilizam múltiplas threads. 
 
+Comparação entre Métodos Sequenciais e Multi-Threaded:
+
+​	Ficou evidente que o processamento sequencial dos filtros de imagens é consistentemente mais lento quando comparado com as abordagens que empregam múltiplas threads ou utilizam um pool de threads. A utilização de um único fluxo de processamento não aproveita as capacidades modernas dos processadores multi-core, resultando em uma utilização subótima dos recursos disponíveis e, consequentemente, em um tempo de execução prolongado. 
+
+Desempenho entre Implementações de Threads:
+
+Dentro das implementações que utilizam threads, observou-se que o método multi-threaded tradicional, embora mais rápido do que o processamento sequencial, tende a apresentar uma queda de desempenho em comparação com os métodos baseados em thread-pool. Isto pode ser atribuído à melhor gestão de recursos e à eficiência na distribuição de tarefas que os pools de threads oferecem, minimizando o tempo ocioso das threads e otimizando a carga de trabalho distribuída. 
+
+Influência do Processador nas Implementações com Threads: 
+
+A quantidade de threads utilizada tem um impacto direto na performance, especialmente em relação à arquitetura do processador em uso. Verificou-se que os desempenhos mais elevados são alcançados quando o número de threads utilizadas aproxima-se do número de núcleos do processador. Isso deve-se ao fato de que cada thread pode ser executada simultaneamente em seu próprio núcleo, maximizando assim a utilização do processador sem causar sobrecarga significativa devido ao contexto de troca ou à competição por recursos.
+
+ Implicações: 
+
+Esses resultados reforçam a importância de considerar a arquitetura do hardware ao desenvolver ou otimizar aplicações para processamento de imagens. A escolha entre sequencial e paralelo, e entre diferentes formas de paralelismo, deve ser informada não apenas pelas características intrínsecas do algoritmo, mas também pelo ambiente de hardware em que a aplicação será executada. Além disso, para obter o máximo desempenho, os desenvolvedores devem aspirar a alinhar o número de threads com o número de núcleos disponíveis no processador, ajustando conforme necessário para evitar tanto a subutilização quanto a sobrecarga do sistema.
 
 ## Garbage Collector
 

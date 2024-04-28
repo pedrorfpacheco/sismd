@@ -12,9 +12,9 @@
 1. **Sequential** - 
    O método BrighterFilter aumenta o brilho de cada pixel da imagem. Este algoritmo percorre cada pixel da imagem, aumenta os valores de vermelho (red), verde (green) e azul (blue) por um valor definido, mas sem exceder o máximo de 255 para cada cor. Se o aumento proposto para qualquer cor ultrapassar 255, essa cor é definida como 255. Depois de ajustar as cores, o pixel é atualizado na imagem temporária.
 
-2. **Multithreaded** - 
+2. **Multi-threaded** - 
 
-​	O método BrighterFilterMultiThread aplica um filtro para tornar uma imagem mais brilhante utilizando múltiplas threads para processar diferentes 	partes da imagem simultaneamente, melhorando a eficiência do processamento. A imagem é dividida horizontalmente em partes iguais, com cada 	thread responsável por aumentar o brilho de uma parte específica. As threads são iniciadas para processar suas respectivas secções e, após todas 	as threads terem concluído o processamento (usando join para sincronização).
+   O método BrighterFilterMultiThread aplica um filtro para tornar uma imagem mais brilhante utilizando múltiplas threads para processar diferentes 	partes da imagem simultaneamente, melhorando a eficiência do processamento. A imagem é dividida horizontalmente em partes iguais, com cada 	thread responsável por aumentar o brilho de uma parte específica. As threads são iniciadas para processar suas respectivas secções e, após todas 	as threads terem concluído o processamento (usando join para sincronização).
 
 1. **Thread-Pool**
 
@@ -23,14 +23,14 @@
       O método BrighterFilterThreadPool aplica um filtro para aumentar o brilho de uma imagem usando uma pool de threads para processamento paralelo, o que melhora a eficiência, especialmente em imagens grandes. Este método divide a imagem em faixas horizontais, onde cada thread em um pool fixo processa uma faixa, aumentando o brilho de cada pixel na faixa designada.
 
       A divisão é feita de modo que todas as threads tenham aproximadamente a mesma quantidade de trabalho, distribuindo as linhas restantes pelas primeiras threads caso a divisão não seja exata. Após submeter todas as tarefas ao executor, o método espera que todas as threads terminem usando *awaitTermination*.
-   2. **Fork Join Pool**</br>
+   2. **Fork Join Pool**
       Esse algoritimo executa de maneira recursiva. 
       É criado um ForkJoinPool com um número específico de threads para processar a imagem de forma paralela. 
       O método invoke é utilizado para executar uma tarefa ForkJoinPool que processa o filtro de brilho em toda a imagem.
       A classe BrightnessFilterForkJoinPoolTask implementa a interface RecursiveAction e é responsável por realizar o processamento do filtro de brilho em uma parte da imagem. 
       Ela divide o trabalho em duas tarefas menores até que esse tamanho seja uma linha da imagem. 
 
-   3. **Completable Futures**</br>
+   3. **Completable Futures**
       Nessa solução o trabalho é dividido em seções (chunks) verticais, cada uma atribuída a uma thread separada. 
       Cada thread processa suas seções de forma independente, aplicando o filtro de brilho aos pixels da imagem. 
       O uso de CompletableFuture permite que as tarefas sejam executadas em paralelo, melhorando o desempenho do processo.
@@ -39,13 +39,10 @@
 #### Grayscale
 
 1. **Sequential** - 
- O filtro de escala de cinza, implementado no método GrayScaleFilter, 
-    converte uma imagem colorida em tons de cinza. Isso é feito calculando 
-    a média dos valores de vermelho, verde e azul para cada pixel e, em seguida, 
-    definindo os componentes de cor do pixel para esse valor médio.
+ O filtro de escala de cinza, implementado no método GrayScaleFilter, converte uma imagem colorida em tons de cinza. Isso é feito calculando a média dos valores de vermelho, verde e azul para cada pixel e, em seguida, definindo os componentes de cor do pixel para esse valor médio.
 
 
-2. **Multithreaded** -
+2. **Multi-threaded** -
    Determina-se o número de linhas que cada thread deveria processar. Isso foi feito dividindo a altura da imagem pelo número de threads e armazena-se o resultado na variável rowsPerThread. As linhas restantes foram distribuídas entre as threads.  
    Em seguida, cria-se um array de threads e inicia-se cada thread para processar uma secção específica da imagem. Cada thread foi criada com uma instância da classe GrayFilterThread, que foi passada a imagem original, as linhas de início e fim que a thread deveria processar.  
    Depois que todas as threads foram iniciadas, utiliza-se o método join para esperar que todas as threads terminassem de processar as suas respectivas secções da imagem.  
@@ -77,7 +74,7 @@
 
 #### Swirl
 
-1. **Sequential**</br>
+1. **Sequential**
    O código começa determinando as dimensões da imagem, ou seja, sua altura e largura. 
    Em seguida, são calculadas as coordenadas do centro da imagem, que serão usadas como base para o filtro swirl. 
    Além disso, é definido o ângulo máximo de rotação, representado por "maxAngle" que será aplicado com base na distância do pixel ao centro da imagem.
@@ -90,23 +87,23 @@
    Usando o ângulo calculado, são calculadas as novas coordenadas do pixel após a aplicação do filtro swirl. 
    Isso é feito usando as fórmulas de transformação mencionadas na documentaçaão do projeto.
 
-3. **Multithreaded**</br>
+3. **Multi-threaded**
    O código cria várias threads para processar a imagem em paralelo. 
    Cada thread é responsável por uma parte da imagem, dividida igualmente com base no número de threads especificado.
    Caso nao seja possível dividir igualitariamente, a última thread assume a porção excedente da imagem.
    Para cada parte da imagem atribuída a uma thread, o código itera sobre cada pixel e aplica a transformação descrita anteriormente.
 3. **Thread-Pool**
-   1. **Executor**</br>
+   1. **Executor**
       Muito semelhante aos anteriores onde cada thread é responsável por uma parte específica da imagem, e o filtro de distorção é aplicado. 
       O que diferencia essa implementaçao é que o código utiliza um ExecutorService para gerenciar o pool de threads e aguarda a conclusão do processamento antes de continuar.
       Nesse caso, nao sendo necessário criar e dar start nas threads e nem fazer o join do trabalho.
-   2. **Fork Join Pool**</br>
+   2. **Fork Join Pool**
       Nesse caso, tambeém existe divisao das tarefas.
       Cada thread é responsável por processar uma parte específica da imagem.
       A classe `SwirlFilterForkJoinPoolTask` representa uma tarefa recursiva que aplica o filtro de distorção a uma parte da imagem.
       Essa parte foi definica como sendo a linha de pixeis da imagem. 
       Enquanto for possível dividir a imagem, novos empilhamentos de execução são criados e invocados recursivamente.
-   3. **Completable Futures** </br>
+   3. **Completable Futures**
       Esse algoritimo por sua vez executa de forma assíncrona usando CompletableFuture. 
       Ele começa definindo as dimensões da imagem e os parâmetros do filtro como todos os outros. 
       Para cada parte da imagem atribuída a uma tarefa, é criado um CompletableFuture que executa de maneira assíncrona para processar cada pixel (a mesma divisão aqui foi explicada no tópico de Miltithreads).
@@ -121,8 +118,7 @@
    Substituiu-se o pixel original pelo pixel deslocado na imagem copiada.  
    Finalmente, escreve-se a imagem processada num arquivo.
 
-
-2. **Multithreaded** -
+2. **Multi-threaded** -
    Cria-se uma cópia da imagem original para armazenar a imagem processada.  
    Em seguida, dividi-se a imagem em várias secções, cada uma processada por uma thread separada.  
    Para cada thread, percorre cada pixel na secção atribuída a essa thread. Para cada pixel, calcula um deslocamento aleatório dentro de um raio especificado (5 pixeis).  
@@ -160,10 +156,11 @@
 
    O método percorre todos os pixels da imagem, utilizando um deslocamento (offset) para definir a área da submatriz centrada em cada pixel. Os novos valores médios de cor calculados substituem os originais, resultando numa imagem desfocada.
    
-2. **Multithreaded** - 
+2. **Multi-threaded** - 
    O método BlurFilterMultiThread aplica um filtro numa imagem utilizando múltiplas *threads* para processar de forma paralela e aumentar a eficiência. Cada thread é responsável por desfocar uma parte específica. A imagem é dividida em segmentos horizontais, e cada segmento é processado por uma *thread* diferente. O número de linhas que cada thread processa é calculado para distribuir as linhas da imagem de maneira igualitária entre as *threads*. Após iniciar todas as *threads*, o método espera que todas terminem sua execução usando o método *join()*.
 
 3. **Thread-Pool**
+
    1. **Executor** - 
 
       O método BlurFilterThreadPool usa um pool de threads para aplicar um filtro de desfoque a uma imagem, melhorando a eficiência para imagens grandes ou para sistemas com múltiplos processadores. A imagem é dividida em várias partes, cada uma sendo processada em paralelo por diferentes threads. A quantidade de tarefas é determinada pelo tamanho da imagem e pelo número de threads, ajustando para que cada tarefa tenha um trabalho significativo mas não muito pequeno (mínimo de 10000 pixels por tarefa).

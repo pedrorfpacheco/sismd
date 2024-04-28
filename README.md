@@ -216,8 +216,7 @@
    3. **Completable Futures** - 
 
 #### Swirl
-
-![city-swirl.jpg](StarterCode/assets/swirl/city-swirl.jpg)
+<img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="200"/></br>
 1. Sequential
 2. Multithreaded
 3. Thread-Pool

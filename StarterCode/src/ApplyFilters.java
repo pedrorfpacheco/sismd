@@ -368,13 +368,17 @@ public class ApplyFilters {
         final String filter = chooseFilter();
 
         switch (filter) {
+            case "1":
+                BrightTestsReport brighterTestsReport = new BrightTestsReport();
+                brighterTestsReport.runTests(filePath);
             case "2":
                 GrayTestsReport grayTestsReport = new GrayTestsReport();
                 grayTestsReport.runTests(filePath);
+            case "3":
+                SwirlTestsReport swirlTestsReport = new SwirlTestsReport();
+                swirlTestsReport.runTests(filePath);
                 break;
             case "4":
-                GlassTestsReport glassTestsReport = new GlassTestsReport();
-                glassTestsReport.runTests(filePath);
                 break;
             default:
                 System.out.println("Invalid filter");
@@ -388,18 +392,26 @@ public class ApplyFilters {
         System.out.println("1. city.jpg");
         System.out.println("2. tree.jpg");
         System.out.println("3. turtle.jpg");
+        System.out.println("4. monkey.jpg");
+        System.out.println("5. eye.jpg");
 
         String filePath = input.nextLine();
 
         switch (filePath) {
             case "1":
-                filePath = "city.jpg";
+                filePath = "./StarterCode/city.jpg";
                 break;
             case "2":
-                filePath = "tree.jpg";
+                filePath = "./StarterCode/tree.jpg";
                 break;
             case "3":
-                filePath = "turtle.jpg";
+                filePath = "./StarterCode/turtle.jpg";
+                break;
+            case "4":
+                filePath = "./StarterCode/monkey.jpg";
+                break;
+            case "5":
+                filePath = "./StarterCode/eye.jpg";
                 break;
             default:
                 System.out.println("Invalid image");

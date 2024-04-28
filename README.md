@@ -217,13 +217,20 @@
 
 #### Swirl
 <img src="./StarterCode/assets/swirl/city-swirl.jpg" alt="drawing" width="200"/></br>
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-   
+1. **Sequential**
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 2269        | 2278        | 2328        | 2291              |
+| Tree       | 215         | 211         | 211         | 212               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![city-metrics.png](StarterCode/assets/swirl/city-metrics.png)
+![city-chart.png](StarterCode/assets/swirl/city-chart.png)
+
 #### Glass
 
 1. Sequential
@@ -272,13 +279,20 @@
    3. Completable Futures
 
 #### Swirl
+<img src="./StarterCode/assets/swirl/tree-swirl.jpg" alt="drawing" width="200"/></br>
+1. **Sequential**
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 215         | 211         | 211         | 212               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![tree-metrics.png](StarterCode/assets/swirl/tree-metrics.png)
+![tree-chart.png](StarterCode/assets/swirl/tree-chart.png)
+
 
 #### Glass
 
@@ -328,13 +342,20 @@
    3. Completable Futures
 
 #### Swirl
+<img src="./StarterCode/assets/swirl/turtle-swirl.png" alt="drawing" width="200"/></br>
+1. **Sequential**
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle     | 77          | 77          | 91          | 245               |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+
+![turtle-metrics.png](StarterCode/assets/swirl/turtle-metrics.png)
+![turtle-chart.png](StarterCode/assets/swirl/turtle-chart.png)
 
 #### Glass
 

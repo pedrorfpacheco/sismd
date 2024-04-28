@@ -49,14 +49,15 @@ public class ApplyFilters {
 
     public static void applyFilter(String filter, String filePath) throws IOException, InterruptedException, ExecutionException {
         Filters filters = new Filters(filePath);
-        final int numThreads = 6;
+        final int numThreads = 7;
         final int matrixSizeForBlur = 3;
+        final int brighterIntensity = 128;
 
         switch (filter) {
             case "1":
                 long startTime1 = System.currentTimeMillis();
 
-                filters.BrighterFilter("brighter.jpg", 128);
+                filters.BrighterFilter("brighter.jpg", brighterIntensity);
 
                 long endTime1 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime1 - startTime1) + " milliseconds");
@@ -115,7 +116,7 @@ public class ApplyFilters {
             case "7":
                 long startTime7 = System.currentTimeMillis();
 
-                filters.BrighterFilterMultiThread("brighterMultiThread.jpg", 128, numThreads);
+                filters.BrighterFilterMultiThread("brighterMultiThread.jpg", brighterIntensity, numThreads);
 
                 long endTime7 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime7 - startTime7) + " milliseconds");
@@ -136,7 +137,7 @@ public class ApplyFilters {
                 long startTime9 = System.currentTimeMillis();
                 int threads = Runtime.getRuntime().availableProcessors();
 
-                filters.SwirlFilterMultiThread("swirlMultithreading.jpg", threads);
+                filters.SwirlFilterMultiThread("swirlMultithreading.jpg", numThreads);
 
                 long endTime9 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime9 - startTime9) + " milliseconds");
@@ -176,8 +177,7 @@ public class ApplyFilters {
             case "13":
                 long startTime13 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", 128, threads);
+                filters.BrighterFilterThreadPool("brighterThreadPool.jpg", brighterIntensity, numThreads);
 
                 long endTime13 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime13 - startTime13) + " milliseconds");
@@ -197,8 +197,7 @@ public class ApplyFilters {
             case "15":
                 long startTime15 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.SwirlFilterThreadPool("swirlThreadPool.jpg", threads);
+                filters.SwirlFilterThreadPool("swirlThreadPool.jpg", numThreads);
 
                 long endTime15 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime15 - startTime15) + " milliseconds");
@@ -238,8 +237,7 @@ public class ApplyFilters {
             case "19":
                 long startTime19 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.BrighterFilterForkJoinPool("brighterForkJoinPool.jpg", threads, 128);
+                filters.BrighterFilterForkJoinPool("brighterForkJoinPool.jpg", numThreads, brighterIntensity);
 
                 long endTime19 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime19 - startTime19) + " milliseconds");
@@ -259,8 +257,7 @@ public class ApplyFilters {
             case "21":
                 long startTime21 = System.currentTimeMillis();
 
-                threads = Runtime.getRuntime().availableProcessors();
-                filters.SwirlFilterForkJoinPool("swirlForkJoinPool.jpg", threads);
+                filters.SwirlFilterForkJoinPool("swirlForkJoinPool.jpg", numThreads);
 
                 long endTime21 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime21 - startTime21) + " milliseconds");
@@ -300,7 +297,7 @@ public class ApplyFilters {
             case "25":
                 long startTime25 = System.currentTimeMillis();
 
-                filters.BrighterFilterCompletableFuture("brighterCompletableFutures.jpg", numThreads, 128);
+                filters.BrighterFilterCompletableFuture("brighterCompletableFutures.jpg", numThreads, brighterIntensity);
 
                 long endTime25 = System.currentTimeMillis();
                 System.out.println("\nExecution time: " + (endTime25 - startTime25) + " milliseconds");
@@ -404,19 +401,19 @@ public class ApplyFilters {
 
         switch (filePath) {
             case "1":
-                filePath = "city.jpg";
+                filePath = "./StarterCode/city.jpg";
                 break;
             case "2":
-                filePath = "tree.jpg";
+                filePath = "./StarterCode/tree.jpg";
                 break;
             case "3":
-                filePath = "turtle.jpg";
+                filePath = "./StarterCode/turtle.jpg";
                 break;
             case "4":
-                filePath = "monkey.jpg";
+                filePath = "./StarterCode/monkey.jpg";
                 break;
             case "5":
-                filePath = "eye.jpg";
+                filePath = "./StarterCode/eye.jpg";
                 break;
             default:
                 System.out.println("Invalid image");

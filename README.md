@@ -5,7 +5,7 @@
 - Pedro Pacheco - 1181034
 - Vera Pinto - 1180730
 
-## Implementação (explicar o que fizemos por alto ou mostrar métodos importantes tipo a implementação do filtro em cada sequencial)
+## Implementação
 
 #### Brightness
 
@@ -13,13 +13,15 @@
    O método BrighterFilter aumenta o brilho de cada pixel da imagem. Este algoritmo percorre cada pixel da imagem, aumenta os valores de vermelho (red), verde (green) e azul (blue) por um valor definido, mas sem exceder o máximo de 255 para cada cor. Se o aumento proposto para qualquer cor ultrapassar 255, essa cor é definida como 255. Depois de ajustar as cores, o pixel é atualizado na imagem temporária.
 
 2. **Multithreaded** - 
-   
 
-3. **Thread-Pool**
+​	O método BrighterFilterMultiThread aplica um filtro para tornar uma imagem mais brilhante utilizando múltiplas threads para processar diferentes 	partes da imagem simultaneamente, melhorando a eficiência do processamento. A imagem é dividida horizontalmente em partes iguais, com cada 	thread responsável por aumentar o brilho de uma parte específica. As threads são iniciadas para processar suas respectivas secções e, após todas 	as threads terem concluído o processamento (usando join para sincronização).
+
+1. **Thread-Pool**
+
    1. **Executor** - 
-   
+
       O método BrighterFilterThreadPool aplica um filtro para aumentar o brilho de uma imagem usando uma pool de threads para processamento paralelo, o que melhora a eficiência, especialmente em imagens grandes. Este método divide a imagem em faixas horizontais, onde cada thread em um pool fixo processa uma faixa, aumentando o brilho de cada pixel na faixa designada.
-   
+
       A divisão é feita de modo que todas as threads tenham aproximadamente a mesma quantidade de trabalho, distribuindo as linhas restantes pelas primeiras threads caso a divisão não seja exata. Após submeter todas as tarefas ao executor, o método espera que todas as threads terminem usando *awaitTermination*.
    2. **Fork Join Pool**</br>
       Esse algoritimo executa de maneira recursiva. 
@@ -27,7 +29,7 @@
       O método invoke é utilizado para executar uma tarefa ForkJoinPool que processa o filtro de brilho em toda a imagem.
       A classe BrightnessFilterForkJoinPoolTask implementa a interface RecursiveAction e é responsável por realizar o processamento do filtro de brilho em uma parte da imagem. 
       Ela divide o trabalho em duas tarefas menores até que esse tamanho seja uma linha da imagem. 
-   
+
    3. **Completable Futures**</br>
       Nessa solução o trabalho é dividido em seções (chunks) verticais, cada uma atribuída a uma thread separada. 
       Cada thread processa suas seções de forma independente, aplicando o filtro de brilho aos pixels da imagem. 
@@ -38,9 +40,9 @@
 
 1. **Sequential** - 
  O filtro de escala de cinza, implementado no método GrayScaleFilter, 
- converte uma imagem colorida em tons de cinza. Isso é feito calculando 
- a média dos valores de vermelho, verde e azul para cada pixel e, em seguida, 
- definindo os componentes de cor do pixel para esse valor médio.
+    converte uma imagem colorida em tons de cinza. Isso é feito calculando 
+    a média dos valores de vermelho, verde e azul para cada pixel e, em seguida, 
+    definindo os componentes de cor do pixel para esse valor médio.
 
 
 2. **Multithreaded** -
@@ -158,7 +160,6 @@
 
    O método percorre todos os pixels da imagem, utilizando um deslocamento (offset) para definir a área da submatriz centrada em cada pixel. Os novos valores médios de cor calculados substituem os originais, resultando numa imagem desfocada.
    
-
 2. **Multithreaded** - 
    O método BlurFilterMultiThread aplica um filtro numa imagem utilizando múltiplas *threads* para processar de forma paralela e aumentar a eficiência. Cada thread é responsável por desfocar uma parte específica. A imagem é dividida em segmentos horizontais, e cada segmento é processado por uma *thread* diferente. O número de linhas que cada thread processa é calculado para distribuir as linhas da imagem de maneira igualitária entre as *threads*. Após iniciar todas as *threads*, o método espera que todas terminem sua execução usando o método *join()*.
 
@@ -169,17 +170,17 @@
 
       Cada tarefa é responsável por aplicar o desfoque em uma faixa horizontal específica da imagem, calculada com base na altura total da imagem e no número de tarefas. Depois de iniciar todas as tarefas, o método espera que todas terminem usando awaitTermination.
       
-
    2. **Fork Join Pool** - 
-
+   
       O método BlurFilterForkJoinPool utiliza a estrutura ForkJoinPool para aplicar um filtro de desfoque a uma imagem de maneira eficiente e paralela. A imagem é processada dividindo-a em sub-regiões menores, que são então atribuídas a diferentes threads gerenciadas pelo ForkJoinPool. Cada thread trabalha em uma seção da imagem, aplicando o filtro de desfoque, e esse processo é feito de maneira recursiva até que as seções atinjam um tamanho de limite (THRESHOLD), momento em que o filtro é aplicado diretamente.
-
+   
       A classe BlurFilterForkJoinPoolTask, que estende RecursiveAction, é responsável por essa divisão e pelo processamento do filtro. Se a área a ser processada é pequena o suficiente (menor que o THRESHOLD), o filtro é aplicado diretamente. Caso contrário, a tarefa é dividida em quatro sub-tarefas, processando cada quadrante da área de forma recursiva.
       
-
    3. **Completable Futures** - 
 
+      O método BlurFilterCompletableFuture utiliza o CompletableFuture para aplicar um filtro de desfoque (blur) em uma imagem de forma assíncrona e paralela. A imagem é dividida verticalmente em segmentos com base no número de threads especificado. Cada CompletableFuture é responsável por desfocar uma coluna específica da imagem, desde o início até o fim da altura, utilizando uma largura de segmento definida.
       
+      Este processo é realizado de forma assíncrona, permitindo que várias partes da imagem sejam processadas simultaneamente. Após iniciar todas as tarefas assíncronas, o método aguarda a conclusão de todas elas com CompletableFuture.allOf(futures).join(), garantindo que todas as partes tenham sido processadas antes de prosseguir.
       
 
 #### Conditional Blur
@@ -191,7 +192,7 @@
    2. Fork Join Pool
    3. Completable Futures
 
-## Resultados(colocar tabelas com os tempos, explicar as tabelas e colocar imagens de cada resultado)
+## Resultados
 
 ### City.jpg
 
@@ -245,12 +246,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+<img src="./StarterCode/assets/blur/city-output.jpg" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| City       | 2697        | 2705        | 2750        | 2717              |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![city-table.png](StarterCode/assets/blur/city-table.png)
+![city-graph.png](StarterCode/assets/blur/city-graph.png)
 
 #### Conditional Blur
 
@@ -313,12 +320,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+<img src="./StarterCode/assets/blur/tree-output.jpg" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Tree       | 339        | 344        | 370        | 351              |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![tree-table.png](StarterCode/assets/blur/tree-table.png)
+![tree-graph.png](StarterCode/assets/blur/tree-graph.png)
 
 #### Conditional Blur
 
@@ -382,12 +395,18 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Blur
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
+<img src="./StarterCode/assets/blur/turtle-output.jpg" alt="drawing" width="300"/></br>
+
+1. **Sequential**
+| Resultados | Time 1 (ms) | Time 2 (ms) | Time 3 (ms) | Average Time (ms) |
+|------------|-------------|-------------|-------------|-------------------|
+| Turtle       | 121        | 111        | 135        | 123              |
+
+2. **Multithreaded and Thread-Pool**
+
+Todos os tempos são resultantes de uma média de três execuções.
+![turtle-table.png](StarterCode/assets/blur/turtle-table.png)
+![turtle-graph.png](StarterCode/assets/blur/turtle-graph.png)
 
 #### Conditional Blur
 
@@ -398,63 +417,11 @@ Todos os tempos são resultantes de uma média de três execuções.
    2. Fork Join Pool
    3. Completable Futures
 
-### Eye.jpg - Não fazer até decidirmos se é preciso
+### Conclusões das implementações
 
-#### Brightness
 
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
 
-#### Grayscale
-
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-
-#### Swirl
-
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-
-#### Glass
-
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-
-#### Blur
-
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-
-#### Conditional Blur
-
-1. Sequential
-2. Multithreaded
-3. Thread-Pool
-   1. Executor
-   2. Fork Join Pool
-   3. Completable Futures
-
-### Garbage Collector
+## Garbage Collector
 
 In order to improve performance, we looked into garbage collection tuning.
 We analyzed the following garbage collectors: Serial, Parallel, G1, Shenandoah and Z.

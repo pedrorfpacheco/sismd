@@ -403,19 +403,19 @@ public class ApplyFilters {
 
         switch (filePath) {
             case "1":
-                filePath = "./StarterCode/city.jpg";
+                filePath = "city.jpg";
                 break;
             case "2":
-                filePath = "./StarterCode/tree.jpg";
+                filePath = "tree.jpg";
                 break;
             case "3":
-                filePath = "./StarterCode/turtle.jpg";
+                filePath = "turtle.jpg";
                 break;
             case "4":
-                filePath = "./StarterCode/monkey.jpg";
+                filePath = "monkey.jpg";
                 break;
             case "5":
-                filePath = "./StarterCode/eye.jpg";
+                filePath = "eye.jpg";
                 break;
             default:
                 System.out.println("Invalid image");

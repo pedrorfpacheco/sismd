@@ -22,7 +22,7 @@ public class GrayTestsReport {
                 for (int i = 0; i < 3; i++) {
                     Filters filters = new Filters(filePath);
 
-                    long startTime = System.nanoTime();
+                    /*long startTime = System.nanoTime();
                     filters.GrayFilterMultiThread("outputGrayFilterMultiThread.png", numThreads);
                     long endTime = System.nanoTime();
                     executionTimesMultiThread.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
@@ -35,23 +35,23 @@ public class GrayTestsReport {
                     startTime = System.nanoTime();
                     filters.GrayFilterForkJoinPool("outputGrayFilterForkJoinPool.png", numThreads);
                     endTime = System.nanoTime();
-                    executionTimesForkJoinPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
+                    executionTimesForkJoinPool.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));*/
 
-                    startTime = System.nanoTime();
+                    long startTime = System.nanoTime();
                     filters.GrayFilterCompletableFuture("outputGrayFilterCompletableFuture.png", numThreads);
-                    endTime = System.nanoTime();
+                    long endTime = System.nanoTime();
                     executionTimesCompletableFuture.add(TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
                 }
 
-                double averageExecutionTimeMultiThread = executionTimesMultiThread.stream().mapToLong(val -> val).average().orElse(0.0);
-                double averageExecutionTimeThreadPool = executionTimesThreadPool.stream().mapToLong(val -> val).average().orElse(0.0);
-                double averageExecutionTimeForkJoinPool = executionTimesForkJoinPool.stream().mapToLong(val -> val).average().orElse(0.0);
+                //double averageExecutionTimeMultiThread = executionTimesMultiThread.stream().mapToLong(val -> val).average().orElse(0.0);
+                //double averageExecutionTimeThreadPool = executionTimesThreadPool.stream().mapToLong(val -> val).average().orElse(0.0);
+                //double averageExecutionTimeForkJoinPool = executionTimesForkJoinPool.stream().mapToLong(val -> val).average().orElse(0.0);
                 double averageExecutionTimeCompletableFuture = executionTimesCompletableFuture.stream().mapToLong(val -> val).average().orElse(0.0);
 
                 System.out.println("\nAverage execution time for " + numThreads + " threads:");
-                System.out.println("MultiThread: " + averageExecutionTimeMultiThread + " ms");
-                System.out.println("ThreadPool: " + averageExecutionTimeThreadPool + " ms");
-                System.out.println("ForkJoinPool: " + averageExecutionTimeForkJoinPool + " ms");
+                //System.out.println("MultiThread: " + averageExecutionTimeMultiThread + " ms");
+                //System.out.println("ThreadPool: " + averageExecutionTimeThreadPool + " ms");
+                //System.out.println("ForkJoinPool: " + averageExecutionTimeForkJoinPool + " ms");
                 System.out.println("CompletableFuture: " + averageExecutionTimeCompletableFuture + " ms");
             } catch (Exception e) {
                 System.out.println("\nError running tests: " + e.getMessage());

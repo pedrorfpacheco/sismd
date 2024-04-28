@@ -213,8 +213,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 
 #### Grayscale
 
-![turtle-metrics.png](StarterCode/assets/gray/city.jpg)
-
+<img src="./StarterCode/assets/gray/city.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequencial** -
 
@@ -249,8 +248,7 @@ Todos os tempos são resultantes de uma média de três execuções.
 ![city-chart.png](StarterCode/assets/swirl/city-chart.png)
 
 #### Glass
-
-![turtle-metrics.png](StarterCode/assets/glass/city.jpg)
+<img src="./StarterCode/assets/glass/city.jpg" alt="drawing" width="300"/></br>
 
 1. **Sequencial** - 
 
